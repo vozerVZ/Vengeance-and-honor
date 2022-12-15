@@ -8,17 +8,20 @@ using namespace sf;
 
 int main(){
 	RenderWindow window(sf::VideoMode(800, 600), "Vengeance and honor(indev)");
+	// Starting menu state
 	menu(window);
 	View view;
 	view.reset(sf::FloatRect(0, 0, 800, 600));
+	// Map texture load
 	Image map_image;
 	map_image.loadFromFile("images/map.png");
 	Texture map;
 	map.loadFromImage(map_image);
 	Sprite s_map;
 	s_map.setTexture(map);
-	Clock clock;
 
+	Clock clock;
+	// Font/text initialization
 	Font font;
 	font.loadFromFile("fonts/CyrilicOld.ttf");
 	Text text("", font, 13);
@@ -143,7 +146,7 @@ int main(){
 				}
 			}	
 		}
-
+		// Player and enemies update/draw
 		p.update(time);
 		
 		for (int i = 0; i < enemies.size(); i++) {
@@ -154,7 +157,7 @@ int main(){
 		window.setView(view);
 		window.clear();
 
-		//Map drawing
+		// Map drawing
 		for (int i = 0; i < 90; i++) {
 			for (int j = 0; j < 140; j++){
 				if (tileMap[i][j] == 0)  s_map.setTextureRect(IntRect(96, 0, 32, 32));
@@ -166,7 +169,7 @@ int main(){
 		}
 
 		p.draw(window, debugMode);
-
+		// Drawing name + level of enemies above them(bc from class drawing text causing "Acces reading violation"). Try to fix?
 		for (int i = 0; i < enemies.size(); i++) {
 			enemies[i]->draw(window, debugMode);
 			if (enemies[i]->life) {
@@ -178,7 +181,7 @@ int main(){
 				window.draw(text);
 			}
 		}
-
+		// Draw player healthbar(same problem)
 		std::ostringstream playerHP;
 		playerHP << p.health;
 		std::ostringstream playerMaxHP;

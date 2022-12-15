@@ -5,6 +5,7 @@
 using namespace sf;
 
 void menu(RenderWindow& window) {
+	// Load textures
 	Texture menuTexture1, menuTexture2, menuTexture3, aboutTexture, menuBackground, warriorTexture, skeletonTexture;
 	menuTexture1.loadFromFile("images/menu/1.png");
 	menuTexture2.loadFromFile("images/menu/2.png");
@@ -18,6 +19,7 @@ void menu(RenderWindow& window) {
 	bool isCollision = false;
 	int menuNum = 0;
 	float menuAnimFrame = 0;
+	// Set textures
 	menu1.setPosition(0, 120);
 	warrior.setPosition(170, 110);
 	menu2.setPosition(0, 180);
@@ -36,13 +38,13 @@ void menu(RenderWindow& window) {
 		menu3.setColor(Color::White);
 		menuNum = 0;
 		window.clear();
-
+		// Set textures of warrior/skeleton near buttons
 		warrior.setTextureRect(IntRect(0, 0, 48, 48));
 		skeleton.setTextureRect(IntRect(0, 0, 48, 48));
 
 		if (!isCollision) { menuAnimFrame = 0; }
 		isCollision = false;
-
+		// Start animation when cursor collide with button
 		if (IntRect(0, 120, 180, 50).contains(Mouse::getPosition(window))) { 
 			isCollision = true;
 			menu1.setColor(Color::Blue); 
@@ -60,7 +62,7 @@ void menu(RenderWindow& window) {
 			skeleton.setTextureRect(IntRect(48 * int(menuAnimFrame), 0, 48, 48));
 			if (menuAnimFrame > 8) menuAnimFrame = 0;
 		}
-
+		// Click on buttons
 		if (Mouse::isButtonPressed(Mouse::Left)){
 			if (menuNum == 1) isMenu = false;
 			if (menuNum == 2) { window.draw(about); window.display(); while (!Keyboard::isKeyPressed(Keyboard::Escape)); }

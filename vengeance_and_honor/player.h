@@ -9,18 +9,18 @@ class Player {
 private: float x, y;
 public:
 	float w, h, dx, dy, speed;
-	int dir = 0;
-	int maxHealth = 100;
-	int health = maxHealth;
-	int damage = 20;
-	bool life = true;
-	int attackersCount = 0;
-	//Timers
-	int attackTimer = 0;
-	int respawnTimer = 0;
-	int idleTimer = 0;
-	int healTimer = 0;
-	//Animation
+	int dir;
+	int maxHealth;
+	int health;
+	int damage;
+	bool life;
+	int attackersCount;
+	// Timers
+	int attackTimer;
+	int respawnTimer;
+	int idleTimer;
+	int healTimer;
+	// Animation vars
 	float CurrentFrame;
 	int animDir = 0; // Walking direction
 	int animType = 0; // 0 - walking 1 - idle 2 - attack 3 - death
@@ -28,7 +28,7 @@ public:
 	const int ANIM_IDLE_MAX_FRAMES = 5;
 	const int ANIM_ATTACK_MAX_FRAMES = 6;
 	const int ANIM_DEATH_MAX_FRAMES = 4;
-	//Sprites
+	// Textures
 	String File;
 	Image image;
 	Texture texture;
@@ -37,7 +37,7 @@ public:
 	CircleShape legHitBox;
 	RectangleShape maxHealthBar;
 	RectangleShape healthBar;
-	//Methods
+	// Functions
 	Player(String F, float X, float Y, float W, float H);
 	void update(float time);
 	void move(const int tileMap[], size_t m, size_t n, float t);

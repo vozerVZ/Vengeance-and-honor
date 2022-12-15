@@ -1,23 +1,33 @@
 #include "player.h"
 
 Player::Player(String F, float X, float Y, float W, float H) {
-	dx = 0; dy = 0; speed = 0;
+	dx = 0; dy = 0; speed = 0; dir = 0;
+	maxHealth = 100;
+	damage = 20;
+	life = true;
+	attackersCount = 0;
+	attackTimer = 0;
+	respawnTimer = 0;
+	idleTimer = 0;
+	healTimer = 0;
+	health = maxHealth;
 	File = F;
 	w = W; h = H;
+	x = X; y = Y;
+	CurrentFrame = 0;
+	// Texture load
 	image.loadFromFile("images/" + File);
 	image.createMaskFromColor(Color(41, 33, 59));
 	texture.loadFromImage(image);
 	sprite.setTexture(texture);
-	x = X; y = Y;
-	CurrentFrame = 0;
 	sprite.setTextureRect(IntRect(0, 0, w, h));
-
+	// Player hitbox
 	hitBox.setSize(Vector2f(w, h));
 	hitBox.setFillColor(Color(255, 0, 0, 0));
 	hitBox.setOutlineColor(Color(0, 0, 255));
 	hitBox.setPosition(x, y);
 	hitBox.setOutlineThickness(1);
-
+	// Player healthbars set
 	maxHealthBar.setSize(Vector2f(150, 15));
 	maxHealthBar.setFillColor(Color(128, 0, 0));
 	maxHealthBar.setPosition(x - 400, y - 300);
@@ -25,19 +35,19 @@ Player::Player(String F, float X, float Y, float W, float H) {
 	healthBar.setSize(Vector2f(150 * health / maxHealth, 15));
 	healthBar.setFillColor(Color(255, 0, 0));
 	healthBar.setPosition(x - 400, y - 300);
-
+	//Leg hitbox set(red dot under legs)
 	legHitBox.setRadius(3);
 	legHitBox.setPosition(x + w / 2, y + h);
 	legHitBox.setFillColor(Color(255, 0, 0));
 }
 
 void Player::update(float time) {
+	// Timers decreasing
 	if (attackTimer > 0) { attackTimer--; }
 	if (respawnTimer > 0) { respawnTimer--; }
 	if (healTimer > 0) { healTimer--; }
-	
-	switch (dir)
-	{
+	// Moving
+	switch (dir){
 	case 0: dx = speed; dy = 0; break;
 	case 1: dx = -speed; dy = 0; break;
 	case 2: dx = 0; dy = speed; break;
@@ -46,6 +56,7 @@ void Player::update(float time) {
 	x += dx * time;
 	y += dy * time;
 	speed = 0;
+	// Sprites/hitboxes/bars set
 	sprite.setPosition(x, y);
 	hitBox.setPosition(x, y);
 	legHitBox.setPosition(x + w / 2, y + h - 15);

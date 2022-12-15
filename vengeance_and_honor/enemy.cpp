@@ -2,22 +2,41 @@
 
 Enemy::Enemy(String F, float W, float H, float xlc, float ylc, float xrc, float yrc, Font f) {
 	dx = 0; dy = 0; speed = 0.05;
+	dir = 0;
+	moveTimer = 0;
+	attackTimer = 0;
+	respawnTimer = 0;
+	mode = 0;
+	maxHealth = 50;
+	health = maxHealth;
+	damage = 5;
+	name = "Skeleton";
+	level = 1;
+	animDir = 0;
+	animType = 0;
+	CurrentFrame = 0;
+	isCount = false;
+	life = true;
 	File = F;
 	w = W; h = H;
+	// Texture load
 	image.loadFromFile("images/" + File);
 	image.createMaskFromColor(Color(41, 33, 59));
 	texture.loadFromImage(image);
 	sprite.setTexture(texture);
+	// Left corners(LC) and right corners(RC) for wandering
 	xLC = xlc;
 	yLC = ylc;
 	xRC = xrc;
 	yRC = yrc;
 	x = rand() % (int)(xRC - xLC - 32 + 1) + (int)xLC;
 	y = rand() % (int)(yRC - yLC - 32 * 2 + 1) + (int)yLC;
+	// X and y destination coords
 	xD = x;
 	yD = y;
 
-	CurrentFrame = 0;
+	
+	// Sptite/hitboxes/healthbar set
 	sprite.setTextureRect(IntRect(0, 0, w, h));
 
 	hitBox.setSize(sf::Vector2f(w, h));
@@ -42,19 +61,20 @@ Enemy::Enemy(String F, float W, float H, float xlc, float ylc, float xrc, float 
 }
 
 void Enemy::update(float time, float playerX, float playerY, Player& pl) {
+	// Timers decreasing
 	if (moveTimer > 0) { moveTimer--; }
 	if (attackTimer > 0) { attackTimer--; }
 	if (respawnTimer > 0) { respawnTimer--; }
 
 	if (life) {
-		if (mode == 0) {
-			if ((int)x / 32 == (int)xD / 32 && (int)y / 32 == (int)yD / 32 && moveTimer == 0) {
+		if (mode == 0) { // Wandering in random point of room
+			if ((int)x / 32 == (int)xD / 32 && (int)y / 32 == (int)yD / 32 && moveTimer == 0) { // If we reach destination point
 				moveTimer = 500;
 				xD = rand() % (int)(xRC - xLC - 32 + 1) + (int)xLC;
 				yD = rand() % (int)(yRC - yLC - 32 * 2 + 1) + (int)yLC;
 			}
 			else {
-				if (moveTimer == 0) {
+				if (moveTimer == 0) { // Go to destination point
 					if ((int)x / 32 < (int)xD / 32) { 
 						if (animType != 0) { CurrentFrame = 0; }
 						animDir = 0; animType = 0;
@@ -97,7 +117,7 @@ void Enemy::update(float time, float playerX, float playerY, Player& pl) {
 					isCount = false;
 					pl.attackersCount--;
 				}
-			}else{
+			}else{ // We are near player, so attack him
 				if ((int)x / 32 == (int)playerX / 32 && (int)y / 32 == (int)playerY / 32) {
 					if (attackTimer == 0) {
 						animType = 1;
@@ -113,7 +133,7 @@ void Enemy::update(float time, float playerX, float playerY, Player& pl) {
 							}
 						}
 					}
-				}else{
+				}else{ // Chasing player
 					if ((int)x / 32 < (int)playerX / 32) { 
 						if (animType != 0) { CurrentFrame = 0; }
 						animDir = 0; animType = 0;
@@ -169,7 +189,7 @@ void Enemy::update(float time, float playerX, float playerY, Player& pl) {
 			sprite.setTextureRect(IntRect(96 * (int(CurrentFrame) + 14), 96 * animDir, 96, 96));
 		}
 	}
-	//Attack animation
+	// Attack animation
 	if (animType == 1) {
 		CurrentFrame += 0.005 * time;
 		sprite.setTextureRect(IntRect(96 * (int(CurrentFrame) + 6), 96 * animDir, 96, 96));
@@ -178,7 +198,7 @@ void Enemy::update(float time, float playerX, float playerY, Player& pl) {
 			CurrentFrame = 0;
 		}
 	}
-	//Respawn
+	// Respawn
 	if (respawnTimer == 1) {
 		life = true;
 		health = maxHealth;
@@ -191,7 +211,7 @@ void Enemy::update(float time, float playerX, float playerY, Player& pl) {
 		sprite.setTextureRect(IntRect(0, 0, 96, 96));
 		
 	}
-	//Sprites sets
+	// Sprites sets
 	healthBar.setSize(sf::Vector2f(w * health / maxHealth, 3));
 	healthBar.setPosition(x, y - 5);
 	sprite.setPosition(x, y);

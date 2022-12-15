@@ -7,7 +7,7 @@ Leaf::Leaf(int X, int Y, int W, int H) {
     height = H;
 }
 
-bool Leaf::split() {
+bool Leaf::split() { // Randomly split leaf into two smaller
     if (!isRightChildNull || !isLeftChildNull) {
         return false;
     }
@@ -47,7 +47,9 @@ bool Leaf::split() {
     return true;
 }
 
-void Leaf::createRoom() {
+void Leaf::createRoom() { 
+    // If fe dont have children(=>smallest leaf), create room inside
+    // Else recursively call this function on children
     /*if (isLeftChildNull && isRightChildNull) {
         int xRand = 10 + rand() % (width / 5);
         int yRand = 10 + rand() % (height / 5);
@@ -78,7 +80,7 @@ void Leaf::createRoom() {
 
 }
 
-vector<int> Leaf::getRoom() {
+vector<int> Leaf::getRoom() { // Get room from deepest parts
     if (isRoomCreate) {
         return room;
     }
@@ -105,7 +107,7 @@ vector<int> Leaf::getRoom() {
     }
 }
 
-void Leaf::createHall(vector<int> l, vector<int> r) {
+void Leaf::createHall(vector<int> l, vector<int> r) { // Create hall between two rooms
     vector<int> point1 = { (l[0] + 10) + rand() % (l[2] - 10), (l[1] + 10) + rand() % (l[3] - 10) };
     vector<int> point2 = { (r[0] + 10) + rand() % (r[2] - 10), (r[1] + 10) + rand() % (r[3] - 10) };
 
