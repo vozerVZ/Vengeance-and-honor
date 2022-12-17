@@ -41,34 +41,21 @@ int Game::run() {
 			if (event.type == sf::Event::Closed)
 				window.close();
 		}
-		//Keyboard control
-		p.move(reinterpret_cast<int*>(tileMap), 90, 140, time);
 
+		p.move(reinterpret_cast<int*>(tileMap), 90, 140, time, enemies);
+
+		//Keyboard control
 		if (Keyboard::isKeyPressed(Keyboard::P) and debugButtonDelay == 0) {
 			debugMode = !debugMode;
 			debugButtonDelay = 20;
 		}
 		if (debugButtonDelay > 0) { debugButtonDelay--; }
 
-		if (Keyboard::isKeyPressed(Keyboard::Enter) && p.attackTimer == 0 && p.life) {
-			p.attackTimer = 100;
-			p.idleTimer = 0;
-			p.animType = 2;
-			p.CurrentFrame = 0;
-			for (int i = 0; i < enemies.size(); i++) {
-				if (enemies[i]->getRect().intersects(p.getRect()) && enemies[i]->life) {
-					enemies[i]->getDamage(p.damage);
-					enemies[i]->mode = 1;
-					if (!enemies[i]->isCount) { enemies[i]->isCount = true; p.attackersCount++; }
-					break;
-				}
-			}
-		}
 		// Player and enemies update/draw
 		p.update(time);
 
 		for (int i = 0; i < enemies.size(); i++) {
-			enemies[i]->update(time, p.getplayercoordinateX(), p.getplayercoordinateY(), p);
+			enemies[i]->update(time, p.getplayercoordinateX(), p.getplayercoordinateY(), p.w, p.h, p.health, p.attackersCount);
 		}
 
 		view.setCenter(p.getplayercoordinateX(), p.getplayercoordinateY());
@@ -86,7 +73,6 @@ int Game::run() {
 			}
 		}
 
-		p.draw(window, debugMode);
 		// Drawing name + level of enemies above them(bc from class drawing text causing "Acces reading violation"). Try to fix?
 		for (int i = 0; i < enemies.size(); i++) {
 			enemies[i]->draw(window, debugMode);
@@ -99,7 +85,10 @@ int Game::run() {
 				window.draw(text);
 			}
 		}
-		// Draw player healthbar(same problem)
+
+		p.draw(window, debugMode);
+
+		// Draw player healthbar(same problem as text of enemy's info)
 		std::ostringstream playerHP;
 		playerHP << p.health;
 		std::ostringstream playerMaxHP;

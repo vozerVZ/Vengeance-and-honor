@@ -3,6 +3,8 @@
 
 #include <SFML\Graphics.hpp>
 #include <iostream>
+#include "enemy.h"
+
 using namespace sf;
 
 class Player {
@@ -40,7 +42,7 @@ public:
 	// Functions
 	Player(String F, float X, float Y, float W, float H);
 	void update(float time);
-	void move(const int tileMap[], size_t m, size_t n, float t);
+	void move(const int tileMap[], size_t m, size_t n, float t, std::vector<Enemy*>& en);
 	void getDamage(int dmg);
 	void draw(RenderWindow& w, bool debug);
 	float getplayercoordinateX();

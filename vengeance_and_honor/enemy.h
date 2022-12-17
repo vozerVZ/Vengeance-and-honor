@@ -4,7 +4,7 @@
 #include <SFML\Graphics.hpp>
 #include <iostream>
 #include <sstream>
-#include "player.h"
+
 using namespace sf;
 
 class Enemy {
@@ -43,7 +43,7 @@ public:
 	CircleShape legHitBox;
 	// Functions
 	Enemy(String F, float W, float H, float xlc, float ylc, float xrc, float yrc, Font f);
-	void update(float time, float playerX, float playerY, Player& pl);
+	void update(float time, float playerX, float playerY, float playerW, float playerH, int& pl_hp, int& pl_att_c);
 	float getenemycoordinateX();
 	float getenemycoordinateY();
 	void getDamage(int dmg);

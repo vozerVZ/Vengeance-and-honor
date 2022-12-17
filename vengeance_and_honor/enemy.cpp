@@ -60,7 +60,7 @@ Enemy::Enemy(String F, float W, float H, float xlc, float ylc, float xrc, float 
 	legHitBox.setFillColor(sf::Color::Red);
 }
 
-void Enemy::update(float time, float playerX, float playerY, Player& pl) {
+void Enemy::update(float time, float playerX, float playerY, float playerW, float playerH, int& pl_hp, int& pl_att_c) {
 	// Timers decreasing
 	if (moveTimer > 0) { moveTimer--; }
 	if (attackTimer > 0) { attackTimer--; }
@@ -110,26 +110,26 @@ void Enemy::update(float time, float playerX, float playerY, Player& pl) {
 				}
 			}
 		}else{
-			if ((playerX + pl.w / 2 + 3) < xLC || (playerX + pl.w / 2 + 3) > xRC || (playerY + pl.h - 15) < yLC || (playerY + pl.h - 15) > yRC) { // Player went out of enemy's room, so start wandering
+			if ((playerX + playerW / 2 + 3) < xLC || (playerX + playerW / 2 + 3) > xRC || (playerY + playerH - 15) < yLC || (playerY + playerH - 15) > yRC) { // Player went out of enemy's room, so start wandering
 				mode = 0;
 				health = maxHealth;
 				if (isCount) {
 					isCount = false;
-					pl.attackersCount--;
+					pl_att_c--;
 				}
 			}else{ // We are near player, so attack him
 				if ((int)x / 32 == (int)playerX / 32 && (int)y / 32 == (int)playerY / 32) {
 					if (attackTimer == 0) {
 						animType = 1;
 						CurrentFrame = 0;
-						pl.getDamage(damage);
+						pl_hp -= damage;
 						attackTimer = 300;
-						if (!pl.isAlive()) {
+						if (pl_hp <= 0) {
 							mode = 0;
 							health = maxHealth;
 							if (isCount) {
 								isCount = false;
-								pl.attackersCount--;
+								pl_att_c--;
 							}
 						}
 					}
@@ -176,7 +176,7 @@ void Enemy::update(float time, float playerX, float playerY, Player& pl) {
 		life = false;
 		if (isCount) {
 			isCount = false;
-			pl.attackersCount--;
+			pl_att_c--;
 		}
 		if (animType != 2) {
 			animType = 2;

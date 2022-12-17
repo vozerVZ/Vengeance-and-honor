@@ -120,7 +120,7 @@ void Player::update(float time) {
 	}
 }
 
-void Player::move(const int tileMap[], size_t m, size_t n, float t){
+void Player::move(const int tileMap[], size_t m, size_t n, float t, std::vector<Enemy*>& en){
 	if (life) {
 		if (Keyboard::isKeyPressed(Keyboard::A)) {
 			if (tileMap[(int)(y + h - 15) / 32 * n + (int)(x + w / 2 - 3) / 32] != 2) {
@@ -160,6 +160,20 @@ void Player::move(const int tileMap[], size_t m, size_t n, float t){
 				CurrentFrame += 0.005 * t;
 				if (CurrentFrame > ANIM_WALKING_MAX_FRAMES) CurrentFrame -= ANIM_WALKING_MAX_FRAMES;
 				sprite.setTextureRect(IntRect(96 * int(CurrentFrame), 96 * animDir, 96, 96));
+			}
+		}
+		if (Keyboard::isKeyPressed(Keyboard::Enter) && attackTimer == 0 && life) {
+			attackTimer = 100;
+			idleTimer = 0;
+			animType = 2;
+			CurrentFrame = 0;
+			for (int i = 0; i < en.size(); i++) {
+				if (en[i]->getRect().intersects(getRect()) && en[i]->life) {
+					en[i]->getDamage(damage);
+					en[i]->mode = 1;
+					if (!en[i]->isCount) { en[i]->isCount = true; attackersCount++; }
+					break;
+				}
 			}
 		}
 	}
