@@ -1,5 +1,8 @@
 #include "map.h"
 
+int tileMap[90][140];
+vector<Leaf*> leafs;
+
 Leaf::Leaf(int X, int Y, int W, int H) {
     x = X;
     y = Y;
@@ -175,4 +178,77 @@ void Leaf::createHall(vector<int> l, vector<int> r) { // Create hall between two
         }
     }
 
+}
+
+void createMap(vector<Enemy*>& en, Font f){
+    Leaf root(0, 0, 1400, 900);
+    leafs.push_back(&root);
+
+    bool splitCycle = true;
+
+    while (splitCycle) {
+        splitCycle = false;
+
+        for (int i = 0; i < leafs.size(); i++) {
+            if (leafs[i]->isRightChildNull && leafs[i]->isLeftChildNull) {
+                if (leafs[i]->width > root.MAX_LEAF_SIZE || leafs[i]->height > root.MAX_LEAF_SIZE || (rand() % 100) > 25) {
+                    if (leafs[i]->split()) {
+                        leafs.push_back(leafs[i]->leftChild);
+                        leafs.push_back(leafs[i]->rightChild);
+                        splitCycle = true;
+                    }
+                }
+            }
+        }
+    }
+
+    root.createRoom();
+
+    for (auto l : leafs) { // Transfer from classes to map
+        if (6 < l->width < 20 && 6 < l->height < 20) {
+            if (l->isRoomCreate) {
+                for (int i = l->room[0] / 10; i < (l->room[0] + l->room[2]) / 10 + 1; i++) {
+                    for (int j = l->room[1] / 10; j < (l->room[1] + l->room[3]) / 10 + 1; j++) {
+                        tileMap[j][i] = 1;
+                    }
+                }
+
+                en.push_back(new Enemy("enemy.png", 96.0, 96.0, l->room[0] / 10 * 32, l->room[1] / 10 * 32, ((l->room[0] + l->room[2]) / 10 + 1) * 32, ((l->room[1] + l->room[3]) / 10 + 1) * 32, f));
+                en.push_back(new Enemy("enemy.png", 96.0, 96.0, l->room[0] / 10 * 32, l->room[1] / 10 * 32, ((l->room[0] + l->room[2]) / 10 + 1) * 32, ((l->room[1] + l->room[3]) / 10 + 1) * 32, f));
+                en.push_back(new Enemy("enemy.png", 96.0, 96.0, l->room[0] / 10 * 32, l->room[1] / 10 * 32, ((l->room[0] + l->room[2]) / 10 + 1) * 32, ((l->room[1] + l->room[3]) / 10 + 1) * 32, f));
+            }
+            if (l->halls.size() > 0) {
+                for (auto k : l->halls) {
+                    for (int i = k[0] / 10; i < (k[0] + k[2]) / 10 + 1; i++) {
+                        for (int j = k[1] / 10; j < (k[1] + k[3]) / 10 + 1; j++) {
+                            tileMap[j][i] = 1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    for (int i = 0; i < 90; i++) { // creating walls
+        for (int j = 0; j < 140; j++) {
+            if (tileMap[i][j] == 0) {
+                if (i > 0 && tileMap[i - 1][j] == 1) { tileMap[i][j] = 2; }
+                else if (i < 89 && tileMap[i + 1][j] == 1) { tileMap[i][j] = 2; }
+                else if (j > 0 && tileMap[i][j - 1] == 1) { tileMap[i][j] = 2; }
+                else if (j < 139 && tileMap[i][j + 1] == 1) { tileMap[i][j] = 2; }
+                else if (i < 89 && j < 139 && tileMap[i + 1][j + 1] == 1) { tileMap[i][j] = 2; }
+                else if (i > 0 && j < 139 && tileMap[i - 1][j + 1] == 1) { tileMap[i][j] = 2; }
+                else if (i < 89 && j > 0 && tileMap[i + 1][j - 1] == 1) { tileMap[i][j] = 2; }
+                else if (i > 0 && j > 0 && tileMap[i - 1][j - 1] == 1) { tileMap[i][j] = 2; }
+            }
+        }
+    }
+
+    /*for (int i = 0; i < 90; i++) {
+        for (int j = 0; j < 140; j++) {
+            cout << tileMap[i][j];
+        }
+        cout << endl;
+    }
+    */
 }

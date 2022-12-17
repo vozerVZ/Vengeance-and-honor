@@ -1,6 +1,7 @@
 #ifndef MAP_H
 #define MAP_H
 
+#include "enemy.h"
 #include <iostream>
 #include <ctime>
 #include <vector>
@@ -11,6 +12,8 @@ using namespace std;
 
 const int HEIGHT_MAP = 90;
 const int WIDTH_MAP = 140;
+
+extern int tileMap[90][140];
 
 class Leaf { // Class for creating BSP-structure of map
 public:
@@ -29,8 +32,11 @@ public:
     void createRoom();
     vector<int> getRoom();
     void createHall(vector<int> l, vector<int> r);
-private:
     const int MIN_LEAF_SIZE = 200;
+    const int MAX_LEAF_SIZE = 300;
 };
+
+extern vector<Leaf*> leafs;
+void createMap(vector<Enemy*>& en, Font f);
 
 #endif
