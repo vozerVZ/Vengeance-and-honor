@@ -21,7 +21,7 @@ int Game::run() {
 	text.setFillColor(Color::Red);
 	text.setStyle(Text::Bold);
 
-	Player p("hero.png", 200, 200, 96.0, 96.0);
+	Player p("hero.png", 0, 0, 96.0, 96.0);
 	Leaf root(0, 0, 1400, 900);
 	leafs.push_back(&root);
 
@@ -35,6 +35,14 @@ int Game::run() {
 	srand((unsigned)time(0));
 
 	menu(window);
+
+	// setting coordinates of minimum-coordinate room
+	p.setplayercoordinateX(xMin * 32);
+	p.setplayercoordinateY(yMin * 32);
+
+	Enemy boss("boss.png", 1, 96.0, 96.0, bossRoomX, bossRoomY, bossRoomW, bossRoomH, font);
+
+	enemies.push_back(&boss);
 
 	while (window.isOpen()) {
 		float time = clock.getElapsedTime().asMicroseconds();
@@ -70,7 +78,8 @@ int Game::run() {
 			debugButtonDelay = 50;
 		}
 
-		if (Keyboard::isKeyPressed(Keyboard::Num1)) { p.setplayercoordinateX(xWell * 32);p.setplayercoordinateX(xWell * 32 + 100); p.setplayercoordinateY(yWell * 32 + 30); }
+		if (Keyboard::isKeyPressed(Keyboard::Num1)) { p.setplayercoordinateX(xWell * 32 + 100); p.setplayercoordinateY(yWell * 32 + 30); }
+		if (Keyboard::isKeyPressed(Keyboard::Num2)) { p.setplayercoordinateX(boss.getenemycoordinateX()); p.setplayercoordinateY(boss.getenemycoordinateY()); }
 
 		// Player and enemies update/draw
 		p.update(time);

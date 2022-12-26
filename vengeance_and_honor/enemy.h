@@ -29,9 +29,9 @@ public:
 	float CurrentFrame;
 	int animDir; // Walking direction
 	int animType; // 0 - walking 1 - attack 2 - death
-	const int ANIM_WALKING_MAX_FRAMES = 6;
-	const int ANIM_ATTACK_MAX_FRAMES = 8;
-	const int ANIM_DEATH_MAX_FRAMES = 7;
+	int ANIM_WALKING_MAX_FRAMES;
+	int ANIM_ATTACK_MAX_FRAMES = 8;
+	int ANIM_DEATH_MAX_FRAMES = 7;
 	// Textures
 	String File;
 	Image image;
@@ -42,7 +42,7 @@ public:
 	RectangleShape healthBar;
 	CircleShape legHitBox;
 	// Functions
-	Enemy(String F, float W, float H, float xlc, float ylc, float xrc, float yrc, Font f);
+	Enemy(String F, int id, float W, float H, float xlc, float ylc, float xrc, float yrc, Font f);
 	void update(float time, float playerX, float playerY, float playerW, float playerH, int& pl_hp, int& pl_att_c);
 	float getenemycoordinateX();
 	float getenemycoordinateY();

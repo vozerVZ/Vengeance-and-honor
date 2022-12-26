@@ -1,22 +1,36 @@
 #include "enemy.h"
 
-Enemy::Enemy(String F, float W, float H, float xlc, float ylc, float xrc, float yrc, Font f) {
+Enemy::Enemy(String F, int id, float W, float H, float xlc, float ylc, float xrc, float yrc, Font f) {
 	dx = 0; dy = 0; speed = 0.05;
 	dir = 0;
 	moveTimer = 0;
 	attackTimer = 0;
 	respawnTimer = 0;
 	mode = 0;
-	maxHealth = 50;
+	if (id == 0) {
+		maxHealth = 50;
+		damage = 5;
+		name = "Skeleton";
+		level = 1;
+		ANIM_WALKING_MAX_FRAMES = 6;
+		ANIM_ATTACK_MAX_FRAMES = 8;
+		ANIM_DEATH_MAX_FRAMES = 7;
+	}else if (id == 1) {
+		maxHealth = 500;
+		damage = 25;
+		name = "Skeleton king";
+		level = 10;
+		ANIM_WALKING_MAX_FRAMES = 10;
+		ANIM_ATTACK_MAX_FRAMES = 10;
+		ANIM_DEATH_MAX_FRAMES = 13;
+	}
 	health = maxHealth;
-	damage = 5;
-	name = "Skeleton";
-	level = 1;
 	animDir = 0;
 	animType = 0;
 	CurrentFrame = 0;
 	isCount = false;
 	life = true;
+	
 	File = F;
 	w = W; h = H;
 	// Texture load
@@ -81,7 +95,7 @@ void Enemy::update(float time, float playerX, float playerY, float playerW, floa
 						x += speed * time;
 						CurrentFrame += 0.005 * time;
 						if (CurrentFrame > ANIM_WALKING_MAX_FRAMES) CurrentFrame -= ANIM_WALKING_MAX_FRAMES;
-						sprite.setTextureRect(IntRect(96 * int(CurrentFrame), 96 * animDir, 96, 96));
+						sprite.setTextureRect(IntRect(int(w) * int(CurrentFrame), int(h) * animDir, int(w), int(h)));
 					}
 					else if ((int)x / 32 > (int)xD / 32) { 
 						if (animType != 0) { CurrentFrame = 0; }
@@ -89,7 +103,7 @@ void Enemy::update(float time, float playerX, float playerY, float playerW, floa
 						x -= speed * time;
 						CurrentFrame += 0.005 * time;
 						if (CurrentFrame > ANIM_WALKING_MAX_FRAMES) CurrentFrame -= ANIM_WALKING_MAX_FRAMES;
-						sprite.setTextureRect(IntRect(96 * int(CurrentFrame), 96 * animDir, 96, 96));
+						sprite.setTextureRect(IntRect(int(w) * int(CurrentFrame), int(h) * animDir, int(w), int(h)));
 					}
 					else if ((int)y / 32 < (int)yD / 32) { 
 						if (animType != 0) { CurrentFrame = 0; }
@@ -97,7 +111,7 @@ void Enemy::update(float time, float playerX, float playerY, float playerW, floa
 						y += speed * time;
 						CurrentFrame += 0.005 * time;
 						if (CurrentFrame > ANIM_WALKING_MAX_FRAMES) CurrentFrame -= ANIM_WALKING_MAX_FRAMES;
-						sprite.setTextureRect(IntRect(96 * int(CurrentFrame), 96 * animDir, 96, 96));
+						sprite.setTextureRect(IntRect(int(w) * int(CurrentFrame), int(h) * animDir, int(w), int(h)));
 					}
 					else if ((int)y / 32 > (int)yD / 32) { 
 						if (animType != 0) { CurrentFrame = 0; }
@@ -105,7 +119,7 @@ void Enemy::update(float time, float playerX, float playerY, float playerW, floa
 						y -= speed * time;
 						CurrentFrame += 0.005 * time;
 						if (CurrentFrame > ANIM_WALKING_MAX_FRAMES) CurrentFrame -= ANIM_WALKING_MAX_FRAMES;
-						sprite.setTextureRect(IntRect(96 * int(CurrentFrame), 96 * animDir, 96, 96));
+						sprite.setTextureRect(IntRect(int(w) * int(CurrentFrame), int(h) * animDir, int(w), int(h)));
 					}
 				}
 			}
@@ -140,7 +154,7 @@ void Enemy::update(float time, float playerX, float playerY, float playerW, floa
 						x += speed * time;
 						CurrentFrame += 0.005 * time;
 						if (CurrentFrame > ANIM_WALKING_MAX_FRAMES) CurrentFrame -= ANIM_WALKING_MAX_FRAMES;
-						sprite.setTextureRect(IntRect(96 * int(CurrentFrame), 96 * animDir, 96, 96));
+						sprite.setTextureRect(IntRect(int(w) * int(CurrentFrame), int(h) * animDir, int(w), int(h)));
 					}
 					else if ((int)x / 32 > (int)playerX / 32) { 
 						if (animType != 0) { CurrentFrame = 0; }
@@ -148,7 +162,7 @@ void Enemy::update(float time, float playerX, float playerY, float playerW, floa
 						x -= speed * time;
 						CurrentFrame += 0.005 * time;
 						if (CurrentFrame > ANIM_WALKING_MAX_FRAMES) CurrentFrame -= ANIM_WALKING_MAX_FRAMES;
-						sprite.setTextureRect(IntRect(96 * int(CurrentFrame), 96 * animDir, 96, 96));
+						sprite.setTextureRect(IntRect(int(w) * int(CurrentFrame), int(h) * animDir, int(w), int(h)));
 					}
 					else if ((int)y / 32 < (int)playerY / 32) { 
 						if (animType != 0) { CurrentFrame = 0; }
@@ -156,7 +170,7 @@ void Enemy::update(float time, float playerX, float playerY, float playerW, floa
 						y += speed * time;
 						CurrentFrame += 0.005 * time;
 						if (CurrentFrame > ANIM_WALKING_MAX_FRAMES) CurrentFrame -= ANIM_WALKING_MAX_FRAMES;
-						sprite.setTextureRect(IntRect(96 * int(CurrentFrame), 96 * animDir, 96, 96));
+						sprite.setTextureRect(IntRect(int(w) * int(CurrentFrame), int(h) * animDir, int(w), int(h)));
 					}
 					else if ((int)y / 32 > (int)playerY / 32) { 
 						if (animType != 0) { CurrentFrame = 0; }
@@ -164,7 +178,7 @@ void Enemy::update(float time, float playerX, float playerY, float playerW, floa
 						y -= speed * time;
 						CurrentFrame += 0.005 * time;
 						if (CurrentFrame > ANIM_WALKING_MAX_FRAMES) CurrentFrame -= ANIM_WALKING_MAX_FRAMES;
-						sprite.setTextureRect(IntRect(96 * int(CurrentFrame), 96 * animDir, 96, 96));
+						sprite.setTextureRect(IntRect(int(w) * int(CurrentFrame), int(h) * animDir, int(w), int(h)));
 					}
 				}
 			}
@@ -186,13 +200,13 @@ void Enemy::update(float time, float playerX, float playerY, float playerW, floa
 		}
 		if (CurrentFrame <= ANIM_DEATH_MAX_FRAMES) {
 			CurrentFrame += 0.005 * time;
-			sprite.setTextureRect(IntRect(96 * (int(CurrentFrame) + 14), 96 * animDir, 96, 96));
+			sprite.setTextureRect(IntRect(int(w) * (int(CurrentFrame) + 14), int(h) * animDir, int(w), int(h)));
 		}
 	}
 	// Attack animation
 	if (animType == 1) {
 		CurrentFrame += 0.005 * time;
-		sprite.setTextureRect(IntRect(96 * (int(CurrentFrame) + 6), 96 * animDir, 96, 96));
+		sprite.setTextureRect(IntRect(int(w)* (int(CurrentFrame) + 6), int(h)* animDir, int(w), int(h)));
 		if (CurrentFrame > ANIM_ATTACK_MAX_FRAMES) {
 			animType = 0;
 			CurrentFrame = 0;
@@ -208,7 +222,7 @@ void Enemy::update(float time, float playerX, float playerY, float playerW, floa
 		CurrentFrame = 0;
 		animType = 0;
 		animDir = 0;
-		sprite.setTextureRect(IntRect(0, 0, 96, 96));
+		sprite.setTextureRect(IntRect(0, 0, int(w), int(h)));
 		
 	}
 	// Sprites sets

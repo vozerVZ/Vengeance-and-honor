@@ -6,6 +6,11 @@ bool isWellsCreate = false;
 
 int xWell = -1;
 int yWell = -1;
+int xMin = 9999;
+int yMin = 9999;
+int xMax = -1;
+int yMax = -1;
+int bossRoomX, bossRoomY, bossRoomW, bossRoomH;
 
 Leaf::Leaf(int X, int Y, int W, int H) {
     x = X;
@@ -230,10 +235,23 @@ void createMap(vector<Enemy*>& en, Font f){
                     isWellsCreate = true;
                 }
 
+                if((l->room[0] + l->room[1]) / 10 < xMin + yMin){
+                    xMin = l->room[0] / 10;
+                    yMin = l->room[1] / 10;
+                }
+
+                if ((l->room[0] + l->room[1]) / 10 > xMax + yMax) {
+                    xMax = l->room[0] / 10;
+                    yMax = l->room[1] / 10;
+                    bossRoomX = l->room[0] / 10 * 32;
+                    bossRoomY = l->room[1] / 10 * 32;
+                    bossRoomW = ((l->room[0] + l->room[2]) / 10 + 1) * 32;
+                    bossRoomH = ((l->room[1] + l->room[3]) / 10 + 1) * 32;
+                }
                 // Create enemies in this room
-                en.push_back(new Enemy("enemy.png", 96.0, 96.0, l->room[0] / 10 * 32, l->room[1] / 10 * 32, ((l->room[0] + l->room[2]) / 10 + 1) * 32, ((l->room[1] + l->room[3]) / 10 + 1) * 32, f));
-                en.push_back(new Enemy("enemy.png", 96.0, 96.0, l->room[0] / 10 * 32, l->room[1] / 10 * 32, ((l->room[0] + l->room[2]) / 10 + 1) * 32, ((l->room[1] + l->room[3]) / 10 + 1) * 32, f));
-                en.push_back(new Enemy("enemy.png", 96.0, 96.0, l->room[0] / 10 * 32, l->room[1] / 10 * 32, ((l->room[0] + l->room[2]) / 10 + 1) * 32, ((l->room[1] + l->room[3]) / 10 + 1) * 32, f));
+                en.push_back(new Enemy("enemy.png", 0, 96.0, 96.0, l->room[0] / 10 * 32, l->room[1] / 10 * 32, ((l->room[0] + l->room[2]) / 10 + 1) * 32, ((l->room[1] + l->room[3]) / 10 + 1) * 32, f));
+                en.push_back(new Enemy("enemy.png", 0, 96.0, 96.0, l->room[0] / 10 * 32, l->room[1] / 10 * 32, ((l->room[0] + l->room[2]) / 10 + 1) * 32, ((l->room[1] + l->room[3]) / 10 + 1) * 32, f));
+                en.push_back(new Enemy("enemy.png", 0, 96.0, 96.0, l->room[0] / 10 * 32, l->room[1] / 10 * 32, ((l->room[0] + l->room[2]) / 10 + 1) * 32, ((l->room[1] + l->room[3]) / 10 + 1) * 32, f));
             }
             if (l->halls.size() > 0) {
                 for (auto k : l->halls) {
