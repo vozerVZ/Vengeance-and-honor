@@ -13,6 +13,10 @@ using namespace std;
 const int HEIGHT_MAP = 90;
 const int WIDTH_MAP = 140;
 
+extern bool isWellsCreate; // bool var for well riddle
+
+extern int xWell, yWell;
+
 extern int tileMap[90][140];
 
 class Leaf { // Class for creating BSP-structure of map

@@ -2,6 +2,10 @@
 
 int tileMap[90][140];
 vector<Leaf*> leafs;
+bool isWellsCreate = false;
+
+int xWell = -1;
+int yWell = -1;
 
 Leaf::Leaf(int X, int Y, int W, int H) {
     x = X;
@@ -212,7 +216,21 @@ void createMap(vector<Enemy*>& en, Font f){
                         tileMap[j][i] = 1;
                     }
                 }
+                
+                if (!isWellsCreate) { // Crete wells in this room
+                    tileMap[l->room[1] / 10 + 1][l->room[0] / 10 + 1] = 3;
+                    tileMap[l->room[1] / 10 + 1][l->room[0] / 10 + 3] = 3;
+                    tileMap[l->room[1] / 10 + 1][l->room[0] / 10 + 5] = 3;
+                    tileMap[l->room[1] / 10 + 1][l->room[0] / 10 + 7] = 3;
+                    tileMap[l->room[1] / 10 + 1][l->room[0] / 10 + 9] = 3;
+                    
+                    xWell = l->room[0] / 10 + 1;
+                    yWell = l->room[1] / 10 + 1;
 
+                    isWellsCreate = true;
+                }
+
+                // Create enemies in this room
                 en.push_back(new Enemy("enemy.png", 96.0, 96.0, l->room[0] / 10 * 32, l->room[1] / 10 * 32, ((l->room[0] + l->room[2]) / 10 + 1) * 32, ((l->room[1] + l->room[3]) / 10 + 1) * 32, f));
                 en.push_back(new Enemy("enemy.png", 96.0, 96.0, l->room[0] / 10 * 32, l->room[1] / 10 * 32, ((l->room[0] + l->room[2]) / 10 + 1) * 32, ((l->room[1] + l->room[3]) / 10 + 1) * 32, f));
                 en.push_back(new Enemy("enemy.png", 96.0, 96.0, l->room[0] / 10 * 32, l->room[1] / 10 * 32, ((l->room[0] + l->room[2]) / 10 + 1) * 32, ((l->room[1] + l->room[3]) / 10 + 1) * 32, f));

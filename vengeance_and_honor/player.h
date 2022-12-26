@@ -15,8 +15,10 @@ public:
 	int maxHealth;
 	int health;
 	int damage;
-	bool life;
 	int attackersCount;
+	int copperCoins, silverCoins, goldCoins;
+	bool life;
+	bool isWellRiddleSolved = false;
 	// Timers
 	int attackTimer;
 	int respawnTimer;
@@ -47,6 +49,8 @@ public:
 	void draw(RenderWindow& w, bool debug);
 	float getplayercoordinateX();
 	float getplayercoordinateY();
+	void setplayercoordinateX(float xp);
+	void setplayercoordinateY(float yp);
 	bool isAlive();
 	FloatRect getRect();
 };

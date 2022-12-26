@@ -16,7 +16,7 @@ int Game::run() {
 	map_image.loadFromFile("images/map.png");
 	map.loadFromImage(map_image);
 	s_map.setTexture(map);
-	font.loadFromFile("fonts/CyrilicOld.ttf");
+	font.loadFromFile("fonts/Hamlin-Regular.ttf");
 	Text text("", font, 13);
 	text.setFillColor(Color::Red);
 	text.setStyle(Text::Bold);
@@ -24,6 +24,10 @@ int Game::run() {
 	Player p("hero.png", 200, 200, 96.0, 96.0);
 	Leaf root(0, 0, 1400, 900);
 	leafs.push_back(&root);
+
+	RectangleShape r(Vector2f(800.0f, 100.0f));
+	r.setPosition(view.getCenter().x - 400, view.getCenter().y + 200);
+	r.setFillColor(Color::Black);
 
 	// Generating map
 	createMap(enemies, font);
@@ -51,6 +55,23 @@ int Game::run() {
 		}
 		if (debugButtonDelay > 0) { debugButtonDelay--; }
 
+		if(Keyboard::isKeyPressed(Keyboard::E) && debugButtonDelay == 0 && !p.isWellRiddleSolved){
+			if (xWell == int((p.getplayercoordinateX() + p.w / 2) / 32) && yWell == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
+				p.copperCoins = 15; p.silverCoins = 3; p.goldCoins = 0;
+			}else if (xWell == int((p.getplayercoordinateX() + p.w / 2) / 32 - 2) && yWell == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
+				if(p.copperCoins >= 2){ p.copperCoins -= 2; }
+			}else if (xWell == int((p.getplayercoordinateX() + p.w / 4) / 32 - 3) && yWell == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
+				if (p.copperCoins >= 1) { p.copperCoins -= 1; p.silverCoins += 1; }
+			}else if (xWell == int((p.getplayercoordinateX() + p.w / 4) / 32 - 5) && yWell == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
+				if (p.copperCoins >= 1 && p.silverCoins >= 1) { p.copperCoins -= 1; p.silverCoins -= 1; p.goldCoins += 1;}
+			}else if (xWell == int((p.getplayercoordinateX() + p.w / 4) / 32 - 7) && yWell == int((p.getplayercoordinateY() + p.h - 15) / 32)) {	
+				if (p.goldCoins >= 1 && p.silverCoins >= 1) { p.goldCoins -= 1; p.silverCoins -= 1; p.copperCoins += 1; }
+			}
+			debugButtonDelay = 50;
+		}
+
+		if (Keyboard::isKeyPressed(Keyboard::Num1)) { p.setplayercoordinateX(xWell * 32);p.setplayercoordinateX(xWell * 32 + 100); p.setplayercoordinateY(yWell * 32 + 30); }
+
 		// Player and enemies update/draw
 		p.update(time);
 
@@ -65,9 +86,10 @@ int Game::run() {
 		// Map drawing
 		for (int i = 0; i < 90; i++) {
 			for (int j = 0; j < 140; j++) {
-				if (tileMap[i][j] == 0)  s_map.setTextureRect(IntRect(96, 0, 32, 32));
-				if (tileMap[i][j] == 1)  s_map.setTextureRect(IntRect(0, 0, 32, 32));
-				if (tileMap[i][j] == 2)  s_map.setTextureRect(IntRect(64, 0, 32, 32));
+				if (tileMap[i][j] == 0)  s_map.setTextureRect(IntRect(96, 0, 32, 32)); // black square(out-of-bounds)
+				if (tileMap[i][j] == 1)  s_map.setTextureRect(IntRect(0, 0, 32, 32)); // wooden floor
+				if (tileMap[i][j] == 2)  s_map.setTextureRect(IntRect(64, 0, 32, 32)); // cobble wal
+				if (tileMap[i][j] == 3)  s_map.setTextureRect(IntRect(32, 0, 32, 32)); // boulder(test object of well-riddle)
 				s_map.setPosition(j * 32, i * 32);
 				window.draw(s_map);
 			}
@@ -97,6 +119,43 @@ int Game::run() {
 		text.setString(playerHP.str() + '/' + playerMaxHP.str());
 		text.setPosition(view.getCenter().x - 248, view.getCenter().y - 301);
 		window.draw(text);
+
+		// Wells riddle
+		//std::cout << xWell << " " << int((p.getplayercoordinateX() + p.w / 2) / 32) << std::endl;
+		//std::cout << yWell << " " << int((p.getplayercoordinateY() + p.h / 2 - 15) / 32) << std::endl;
+		r.setPosition(view.getCenter().x - 400, view.getCenter().y + 200);
+		if (xWell == int((p.getplayercoordinateX() + p.w / 2) / 32) && yWell == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
+			text.setFillColor(Color(255, 0, 0));
+			text.setString("It's wells of cursed moneys. You have 15 copper coins, 3 silver and 0 gold coins. \nYou must get rid of them. This well reset your coins.");
+			text.setPosition(view.getCenter().x - 400 + 50, view.getCenter().y + 200 + 50);
+			window.draw(r);
+			window.draw(text);
+		}else if (xWell == int((p.getplayercoordinateX() + p.w / 2) / 32 - 2) && yWell == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
+			text.setFillColor(Color(255, 0, 0));
+			text.setString("This well takes two copper coins from you.");
+			text.setPosition(view.getCenter().x - 400 + 50, view.getCenter().y + 200 + 50);
+			window.draw(r);
+			window.draw(text);
+		}else if (xWell == int((p.getplayercoordinateX() + p.w / 4) / 32 - 3) && yWell == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
+			text.setFillColor(Color(255, 0, 0));
+			text.setString("This well takes one copper coin and give you one silver.");
+			text.setPosition(view.getCenter().x - 400 + 50, view.getCenter().y + 200 + 50);
+			window.draw(r);
+			window.draw(text);
+		}else if (xWell == int((p.getplayercoordinateX() + p.w / 4) / 32 - 5) && yWell == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
+			text.setFillColor(Color(255, 0, 0));
+			text.setString("This well takes one copper coin and one silver coin and give you one gold coin.");
+			text.setPosition(view.getCenter().x - 400 + 50, view.getCenter().y + 200 + 50);
+			window.draw(r);
+			window.draw(text);
+		}else if (xWell == int((p.getplayercoordinateX() + p.w / 4) / 32 - 7) && yWell == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
+			text.setFillColor(Color(255, 0, 0));
+			text.setString("This well takes one silver coin and one gold coin and give you one copper coin.");
+			text.setPosition(view.getCenter().x - 400 + 50, view.getCenter().y + 200 + 50);
+			window.draw(r);
+			window.draw(text);
+		}
+
 
 		window.display();
 	}

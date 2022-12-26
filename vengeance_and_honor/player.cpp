@@ -5,12 +5,16 @@ Player::Player(String F, float X, float Y, float W, float H) {
 	maxHealth = 100;
 	damage = 20;
 	life = true;
+	isWellRiddleSolved = false;
 	attackersCount = 0;
 	attackTimer = 0;
 	respawnTimer = 0;
 	idleTimer = 0;
 	healTimer = 0;
 	health = maxHealth;
+	copperCoins = 15;
+	silverCoins = 3;
+	goldCoins = 0;
 	File = F;
 	w = W; h = H;
 	x = X; y = Y;
@@ -118,6 +122,11 @@ void Player::update(float time) {
 			CurrentFrame = 0;
 		}
 	}
+	// Coins check
+	if (!isWellRiddleSolved) { std::cout << copperCoins << " " << silverCoins << " " << goldCoins << " " << std::endl; }
+	if (copperCoins == 0 && silverCoins == 0 && goldCoins == 0 && !isWellRiddleSolved) {
+		isWellRiddleSolved = true;
+	}
 }
 
 void Player::move(const int tileMap[], size_t m, size_t n, float t, std::vector<Enemy*>& en){
@@ -208,4 +217,12 @@ bool Player::isAlive(){
 
 FloatRect Player::getRect() {
 	return FloatRect(x, y, w, h);
+}
+
+void Player::setplayercoordinateX(float xp){
+	x = xp;
+}
+
+void Player::setplayercoordinateY(float yp) {
+	y = yp;
 }
