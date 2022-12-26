@@ -89,7 +89,7 @@ int Game::run() {
 				if (tileMap[i][j] == 0)  s_map.setTextureRect(IntRect(96, 0, 32, 32)); // black square(out-of-bounds)
 				if (tileMap[i][j] == 1)  s_map.setTextureRect(IntRect(0, 0, 32, 32)); // wooden floor
 				if (tileMap[i][j] == 2)  s_map.setTextureRect(IntRect(64, 0, 32, 32)); // cobble wal
-				if (tileMap[i][j] == 3)  s_map.setTextureRect(IntRect(32, 0, 32, 32)); // boulder(test object of well-riddle)
+				if (tileMap[i][j] == 4)  s_map.setTextureRect(IntRect(128, 0, 32, 32)); // well
 				s_map.setPosition(j * 32, i * 32);
 				window.draw(s_map);
 			}

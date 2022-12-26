@@ -218,11 +218,11 @@ void createMap(vector<Enemy*>& en, Font f){
                 }
                 
                 if (!isWellsCreate) { // Crete wells in this room
-                    tileMap[l->room[1] / 10 + 1][l->room[0] / 10 + 1] = 3;
-                    tileMap[l->room[1] / 10 + 1][l->room[0] / 10 + 3] = 3;
-                    tileMap[l->room[1] / 10 + 1][l->room[0] / 10 + 5] = 3;
-                    tileMap[l->room[1] / 10 + 1][l->room[0] / 10 + 7] = 3;
-                    tileMap[l->room[1] / 10 + 1][l->room[0] / 10 + 9] = 3;
+                    tileMap[l->room[1] / 10 + 1][l->room[0] / 10 + 1] = 4;
+                    tileMap[l->room[1] / 10 + 1][l->room[0] / 10 + 3] = 4;
+                    tileMap[l->room[1] / 10 + 1][l->room[0] / 10 + 5] = 4;
+                    tileMap[l->room[1] / 10 + 1][l->room[0] / 10 + 7] = 4;
+                    tileMap[l->room[1] / 10 + 1][l->room[0] / 10 + 9] = 4;
                     
                     xWell = l->room[0] / 10 + 1;
                     yWell = l->room[1] / 10 + 1;
