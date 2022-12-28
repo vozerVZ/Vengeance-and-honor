@@ -6,6 +6,7 @@ Player::Player(String F, float X, float Y, float W, float H) {
 	damage = 20;
 	life = true;
 	isWellRiddleSolved = false;
+	isTableRiddleSolved = false;
 	attackersCount = 0;
 	attackTimer = 0;
 	respawnTimer = 0;

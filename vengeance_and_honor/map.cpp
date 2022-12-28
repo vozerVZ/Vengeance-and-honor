@@ -3,9 +3,12 @@
 int tileMap[90][140];
 vector<Leaf*> leafs;
 bool isWellsCreate = false;
+bool isTablesCreate = false;
 
 int xWell = -1;
 int yWell = -1;
+int xTable = -1;
+int yTable = -1;
 int xMin = 9999;
 int yMin = 9999;
 int xMax = -1;
@@ -233,14 +236,27 @@ void createMap(vector<Enemy*>& en, Font f){
                     yWell = l->room[1] / 10 + 1;
 
                     isWellsCreate = true;
+                }else if (!isTablesCreate) {
+                    tileMap[l->room[1] / 10 + 1][l->room[0] / 10 + 1] = 5;
+                    tileMap[l->room[1] / 10 + 1][l->room[0] / 10 + 3] = 5;
+                    tileMap[l->room[1] / 10 + 1][l->room[0] / 10 + 5] = 5;
+                    tileMap[l->room[1] / 10 + 1][l->room[0] / 10 + 7] = 5;
+                    tileMap[l->room[1] / 10 + 1][l->room[0] / 10 + 9] = 5;
+
+                    xTable = l->room[0] / 10 + 1;
+                    yTable = l->room[1] / 10 + 1;
+
+                    isTablesCreate = true;
                 }
 
-                if((l->room[0] + l->room[1]) / 10 < xMin + yMin){
+                
+
+                if((l->room[0] + l->room[1]) / 10 < xMin + yMin){ // Taking coords of starting room to spawn player
                     xMin = l->room[0] / 10;
                     yMin = l->room[1] / 10;
                 }
 
-                if ((l->room[0] + l->room[1]) / 10 > xMax + yMax) {
+                if ((l->room[0] + l->room[1]) / 10 > xMax + yMax) { // Taking coords of end room to spawn boss
                     xMax = l->room[0] / 10;
                     yMax = l->room[1] / 10;
                     bossRoomX = l->room[0] / 10 * 32;
@@ -253,7 +269,7 @@ void createMap(vector<Enemy*>& en, Font f){
                 en.push_back(new Enemy("enemy.png", 0, 96.0, 96.0, l->room[0] / 10 * 32, l->room[1] / 10 * 32, ((l->room[0] + l->room[2]) / 10 + 1) * 32, ((l->room[1] + l->room[3]) / 10 + 1) * 32, f));
                 en.push_back(new Enemy("enemy.png", 0, 96.0, 96.0, l->room[0] / 10 * 32, l->room[1] / 10 * 32, ((l->room[0] + l->room[2]) / 10 + 1) * 32, ((l->room[1] + l->room[3]) / 10 + 1) * 32, f));
             }
-            if (l->halls.size() > 0) {
+            if (l->halls.size() > 0) { // Adding halls to the map
                 for (auto k : l->halls) {
                     for (int i = k[0] / 10; i < (k[0] + k[2]) / 10 + 1; i++) {
                         for (int j = k[1] / 10; j < (k[1] + k[3]) / 10 + 1; j++) {

@@ -4,6 +4,31 @@ Game::Game() {
 	debugMode = true;
 	debugButtonDelay = 0;
 	memset(tileMap, 0, sizeof(tileMap));
+	// Cards enum 
+	cards.push_back("Three of diamonds");
+	cards.push_back("Three of hearts");
+	cards.push_back("Three of clubs");
+	cards.push_back("Three of spades");
+
+	cards.push_back("Four of diamonds");
+	cards.push_back("Four of hearts");
+	cards.push_back("Four of clubs");
+	cards.push_back("Four of spades");
+
+	cards.push_back("Five of diamonds");
+	cards.push_back("Five of hearts");
+	cards.push_back("Five of clubs");
+	cards.push_back("Five of spades");
+
+	cards.push_back("Six of diamonds");
+	cards.push_back("Six of hearts");
+	cards.push_back("Six of clubs");
+	cards.push_back("Six of spades");
+
+	table1 = 0; // 0
+	table2 = 0; // 15
+	table3 = 0; // 5
+	table4 = 0; // 10
 }
 
 Game::~Game() {
@@ -18,8 +43,16 @@ int Game::run() {
 	s_map.setTexture(map);
 	font.loadFromFile("fonts/Hamlin-Regular.ttf");
 	Text text("", font, 13);
-	text.setFillColor(Color::Red);
+	text.setFillColor(Color::White);
 	text.setStyle(Text::Bold);
+
+	Text text2("", font, 13);
+	text2.setFillColor(Color::White);
+	text2.setStyle(Text::Bold);
+
+	Text text3("", font, 13);
+	text3.setFillColor(Color::White);
+	text3.setStyle(Text::Bold);
 
 	Player p("hero.png", 0, 0, 96.0, 96.0);
 	Leaf root(0, 0, 1400, 900);
@@ -28,6 +61,8 @@ int Game::run() {
 	RectangleShape r(Vector2f(800.0f, 100.0f));
 	r.setPosition(view.getCenter().x - 400, view.getCenter().y + 200);
 	r.setFillColor(Color::Black);
+	r.setOutlineColor(Color::Red);
+	r.setOutlineThickness(2);
 
 	// Generating map
 	createMap(enemies, font);
@@ -63,23 +98,51 @@ int Game::run() {
 		}
 		if (debugButtonDelay > 0) { debugButtonDelay--; }
 
-		if(Keyboard::isKeyPressed(Keyboard::E) && debugButtonDelay == 0 && !p.isWellRiddleSolved){
-			if (xWell == int((p.getplayercoordinateX() + p.w / 2) / 32) && yWell == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
-				p.copperCoins = 15; p.silverCoins = 3; p.goldCoins = 0;
-			}else if (xWell == int((p.getplayercoordinateX() + p.w / 2) / 32 - 2) && yWell == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
-				if(p.copperCoins >= 2){ p.copperCoins -= 2; }
-			}else if (xWell == int((p.getplayercoordinateX() + p.w / 4) / 32 - 3) && yWell == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
-				if (p.copperCoins >= 1) { p.copperCoins -= 1; p.silverCoins += 1; }
-			}else if (xWell == int((p.getplayercoordinateX() + p.w / 4) / 32 - 5) && yWell == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
-				if (p.copperCoins >= 1 && p.silverCoins >= 1) { p.copperCoins -= 1; p.silverCoins -= 1; p.goldCoins += 1;}
-			}else if (xWell == int((p.getplayercoordinateX() + p.w / 4) / 32 - 7) && yWell == int((p.getplayercoordinateY() + p.h - 15) / 32)) {	
-				if (p.goldCoins >= 1 && p.silverCoins >= 1) { p.goldCoins -= 1; p.silverCoins -= 1; p.copperCoins += 1; }
+		if(Keyboard::isKeyPressed(Keyboard::E) && debugButtonDelay == 0){
+			// Wells
+			if (!p.isWellRiddleSolved) {
+				if (xWell == int((p.getplayercoordinateX() + p.w / 2) / 32) && yWell == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
+					p.copperCoins = 15; p.silverCoins = 3; p.goldCoins = 0;
+				}
+				else if (xWell == int((p.getplayercoordinateX() + p.w / 2) / 32 - 2) && yWell == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
+					if (p.copperCoins >= 2) { p.copperCoins -= 2; }
+				}
+				else if (xWell == int((p.getplayercoordinateX() + p.w / 4) / 32 - 3) && yWell == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
+					if (p.copperCoins >= 1) { p.copperCoins -= 1; p.silverCoins += 1; }
+				}
+				else if (xWell == int((p.getplayercoordinateX() + p.w / 4) / 32 - 5) && yWell == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
+					if (p.copperCoins >= 1 && p.silverCoins >= 1) { p.copperCoins -= 1; p.silverCoins -= 1; p.goldCoins += 1; }
+				}
+				else if (xWell == int((p.getplayercoordinateX() + p.w / 4) / 32 - 7) && yWell == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
+					if (p.goldCoins >= 1 && p.silverCoins >= 1) { p.goldCoins -= 1; p.silverCoins -= 1; p.copperCoins += 1; }
+				}
 			}
-			debugButtonDelay = 50;
+			if (!p.isTableRiddleSolved) {
+				if (xTable == int((p.getplayercoordinateX() + p.w / 2) / 32 - 2) && yTable == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
+					table1 += 1;
+					if (table1 > 15) table1 = 0;
+				}
+				else if (xTable == int((p.getplayercoordinateX() + p.w / 4) / 32 - 3) && yTable == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
+					table2 += 1;
+					if (table2 > 15) table2 = 0;
+				}
+				else if (xTable == int((p.getplayercoordinateX() + p.w / 4) / 32 - 5) && yTable == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
+					table3 += 1;
+					if (table3 > 15) table3 = 0;
+				}
+				else if (xTable == int((p.getplayercoordinateX() + p.w / 4) / 32 - 7) && yTable == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
+					table4 += 1;
+					if (table4 > 15) table4 = 0;
+				}
+			}
+			debugButtonDelay = 30;
 		}
 
 		if (Keyboard::isKeyPressed(Keyboard::Num1)) { p.setplayercoordinateX(xWell * 32 + 100); p.setplayercoordinateY(yWell * 32 + 30); }
-		if (Keyboard::isKeyPressed(Keyboard::Num2)) { p.setplayercoordinateX(boss.getenemycoordinateX()); p.setplayercoordinateY(boss.getenemycoordinateY()); }
+		if (Keyboard::isKeyPressed(Keyboard::Num2)) { p.setplayercoordinateX(xTable * 32 + 100); p.setplayercoordinateY(yTable * 32 + 30); }
+		if (Keyboard::isKeyPressed(Keyboard::Num3)) { p.setplayercoordinateX(boss.getenemycoordinateX()); p.setplayercoordinateY(boss.getenemycoordinateY()); }
+		if (Keyboard::isKeyPressed(Keyboard::Num4)) { p.copperCoins = 0; p.silverCoins = 0; p.goldCoins = 0; }
+		if (Keyboard::isKeyPressed(Keyboard::Num5)) { table1 = 0; table2 = 15; table3 = 5; table4 = 10; }
 
 		// Player and enemies update/draw
 		p.update(time);
@@ -92,6 +155,17 @@ int Game::run() {
 		window.setView(view);
 		window.clear();
 
+		if (p.isWellRiddleSolved && tileMap[yWell][xWell + 2] == 4) {
+			tileMap[yWell][xWell + 2] = 1;
+			tileMap[yWell][xWell + 4] = 1;
+			tileMap[yWell][xWell + 6] = 1;
+			tileMap[yWell][xWell + 8] = 1;
+		}
+
+		if (!p.isTableRiddleSolved && table1 == 0 && table2 == 15 && table3 == 5 && table4 == 10) {
+			p.isTableRiddleSolved = true;
+		}
+
 		// Map drawing
 		for (int i = 0; i < 90; i++) {
 			for (int j = 0; j < 140; j++) {
@@ -99,6 +173,7 @@ int Game::run() {
 				if (tileMap[i][j] == 1)  s_map.setTextureRect(IntRect(0, 0, 32, 32)); // wooden floor
 				if (tileMap[i][j] == 2)  s_map.setTextureRect(IntRect(64, 0, 32, 32)); // cobble wal
 				if (tileMap[i][j] == 4)  s_map.setTextureRect(IntRect(128, 0, 32, 32)); // well
+				if (tileMap[i][j] == 5)  s_map.setTextureRect(IntRect(160, 0, 32, 32)); // cards table
 				s_map.setPosition(j * 32, i * 32);
 				window.draw(s_map);
 			}
@@ -129,37 +204,76 @@ int Game::run() {
 		text.setPosition(view.getCenter().x - 248, view.getCenter().y - 301);
 		window.draw(text);
 
-		// Wells riddle
-		//std::cout << xWell << " " << int((p.getplayercoordinateX() + p.w / 2) / 32) << std::endl;
-		//std::cout << yWell << " " << int((p.getplayercoordinateY() + p.h / 2 - 15) / 32) << std::endl;
+		// Wells riddle text
 		r.setPosition(view.getCenter().x - 400, view.getCenter().y + 200);
+		text.setFillColor(Color(255, 0, 0));
 		if (xWell == int((p.getplayercoordinateX() + p.w / 2) / 32) && yWell == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
-			text.setFillColor(Color(255, 0, 0));
-			text.setString("It's wells of cursed moneys. You have 15 copper coins, 3 silver and 0 gold coins. \nYou must get rid of them. This well reset your coins.");
+			if (!p.isWellRiddleSolved) {
+				text.setString("It's wells of cursed moneys. You have 15 copper coins, 3 silver and 0 gold coins. \nYou must get rid of them. This well reset your coins.");
+			}else{
+				text.setString("You are here for your s i n s");
+			}
 			text.setPosition(view.getCenter().x - 400 + 50, view.getCenter().y + 200 + 50);
 			window.draw(r);
 			window.draw(text);
-		}else if (xWell == int((p.getplayercoordinateX() + p.w / 2) / 32 - 2) && yWell == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
-			text.setFillColor(Color(255, 0, 0));
+		}else if (xWell == int((p.getplayercoordinateX() + p.w / 2) / 32 - 2) && yWell == int((p.getplayercoordinateY() + p.h - 15) / 32) && !p.isWellRiddleSolved) {
 			text.setString("This well takes two copper coins from you.");
 			text.setPosition(view.getCenter().x - 400 + 50, view.getCenter().y + 200 + 50);
 			window.draw(r);
 			window.draw(text);
-		}else if (xWell == int((p.getplayercoordinateX() + p.w / 4) / 32 - 3) && yWell == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
-			text.setFillColor(Color(255, 0, 0));
+		}else if (xWell == int((p.getplayercoordinateX() + p.w / 4) / 32 - 3) && yWell == int((p.getplayercoordinateY() + p.h - 15) / 32) && !p.isWellRiddleSolved) {
 			text.setString("This well takes one copper coin and give you one silver.");
 			text.setPosition(view.getCenter().x - 400 + 50, view.getCenter().y + 200 + 50);
 			window.draw(r);
 			window.draw(text);
-		}else if (xWell == int((p.getplayercoordinateX() + p.w / 4) / 32 - 5) && yWell == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
-			text.setFillColor(Color(255, 0, 0));
+		}else if (xWell == int((p.getplayercoordinateX() + p.w / 4) / 32 - 5) && yWell == int((p.getplayercoordinateY() + p.h - 15) / 32) && !p.isWellRiddleSolved) {
 			text.setString("This well takes one copper coin and one silver coin and give you one gold coin.");
 			text.setPosition(view.getCenter().x - 400 + 50, view.getCenter().y + 200 + 50);
 			window.draw(r);
 			window.draw(text);
-		}else if (xWell == int((p.getplayercoordinateX() + p.w / 4) / 32 - 7) && yWell == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
-			text.setFillColor(Color(255, 0, 0));
+		}else if (xWell == int((p.getplayercoordinateX() + p.w / 4) / 32 - 7) && yWell == int((p.getplayercoordinateY() + p.h - 15) / 32) && !p.isWellRiddleSolved) {
 			text.setString("This well takes one silver coin and one gold coin and give you one copper coin.");
+			text.setPosition(view.getCenter().x - 400 + 50, view.getCenter().y + 200 + 50);
+			window.draw(r);
+			window.draw(text);
+		}
+
+		//Tables riddle text
+		if (xTable == int((p.getplayercoordinateX() + p.w / 2) / 32) && yTable == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
+			if (!p.isTableRiddleSolved) {
+				text.setString("The cards on either side of the four are black. The club is to the right of the three, but not next to it.");
+
+				text2.setString("The spade is located to the left of the heart.");
+				text2.setPosition(view.getCenter().x - 400 + 20, view.getCenter().y + 200 + 30);
+				window.draw(text2);
+
+				text3.setString("The two middle cards add up to an even number. None of them are clubs.");
+				text3.setPosition(view.getCenter().x - 400 + 20, view.getCenter().y + 200 + 50);
+				window.draw(text3);
+			} else {
+				text.setString("Why did you kill her?");
+			}
+
+			text.setPosition(view.getCenter().x - 400 + 20, view.getCenter().y + 200 + 10);
+			window.draw(r);
+			window.draw(text);
+		} else if (xTable == int((p.getplayercoordinateX() + p.w / 2) / 32 - 2) && yTable == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
+			text.setString(cards[table1]);
+			text.setPosition(view.getCenter().x - 400 + 50, view.getCenter().y + 200 + 50);
+			window.draw(r);
+			window.draw(text);
+		} else if (xTable == int((p.getplayercoordinateX() + p.w / 4) / 32 - 3) && yTable == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
+			text.setString(cards[table2]);
+			text.setPosition(view.getCenter().x - 400 + 50, view.getCenter().y + 200 + 50);
+			window.draw(r);
+			window.draw(text);
+		} else if (xTable == int((p.getplayercoordinateX() + p.w / 4) / 32 - 5) && yTable == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
+			text.setString(cards[table3]);
+			text.setPosition(view.getCenter().x - 400 + 50, view.getCenter().y + 200 + 50);
+			window.draw(r);
+			window.draw(text);
+		} else if (xTable == int((p.getplayercoordinateX() + p.w / 4) / 32 - 7) && yTable == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
+			text.setString(cards[table4]);
 			text.setPosition(view.getCenter().x - 400 + 50, view.getCenter().y + 200 + 50);
 			window.draw(r);
 			window.draw(text);

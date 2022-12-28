@@ -21,6 +21,8 @@ private:
     bool debugMode;
     int debugButtonDelay;
     std::vector<Enemy*> enemies;
+    std::vector<string> cards;
+    int table1, table2, table3, table4;
     const int MAX_LEAF_SIZE = 300;
 public:
     Game();

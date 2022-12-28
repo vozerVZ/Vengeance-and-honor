@@ -18,7 +18,8 @@ public:
 	int attackersCount;
 	int copperCoins, silverCoins, goldCoins;
 	bool life;
-	bool isWellRiddleSolved = false;
+	bool isWellRiddleSolved;
+	bool isTableRiddleSolved;
 	// Timers
 	int attackTimer;
 	int respawnTimer;

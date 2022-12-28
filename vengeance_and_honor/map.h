@@ -16,6 +16,7 @@ const int WIDTH_MAP = 140;
 extern bool isWellsCreate; // bool var for well riddle
 
 extern int xWell, yWell;
+extern int xTable, yTable;
 extern int xMin, yMin, xMax, yMax;
 extern int bossRoomX, bossRoomY, bossRoomW, bossRoomH;
 
