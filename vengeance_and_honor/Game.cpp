@@ -351,6 +351,7 @@ int Game::run() {
 		// Map drawing
 		if (isMapDrawing) {
 			window.clear();
+
 			for (int i = 0; i < 90; i++) {
 				for (int j = 0; j < 140; j++) {
 					if (tileMap[i][j] == 0)  minimapTile.setFillColor(Color(0, 0, 0)); // black square(out-of-bounds)
@@ -358,7 +359,7 @@ int Game::run() {
 					if (tileMap[i][j] == 2)  minimapTile.setFillColor(Color(128, 128, 128)); // cobble wal
 					if (tileMap[i][j] == 4)  minimapTile.setFillColor(Color(50, 51, 50)); // well
 					if (tileMap[i][j] == 5)  minimapTile.setFillColor(Color(0, 77, 0)); // cards table
-					minimapTile.setPosition((j - 30 + xMapBias) * 6, (i - 30 + yMapBias) * 7);
+					minimapTile.setPosition(view.getCenter().x - 400 + (j - 30 + xMapBias) * 6, view.getCenter().y - 300 + (i - 30 + yMapBias) * 7);
 					window.draw(minimapTile);
 				}
 			}

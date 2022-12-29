@@ -28,7 +28,6 @@ bool Leaf::split() { // Randomly split leaf into two smaller
     }
 
     bool splitMode = (rand() % 100) > 50;
-    std::cout << splitMode << std::endl;
 
     if (width > height && width / height >= 1.25) {
         splitMode = false;
@@ -227,6 +226,11 @@ void createMap(vector<Enemy*>& en, Font f){
                     }
                 }
                 
+                if ((l->room[0] + l->room[1]) / 10 < xMin + yMin) { // Taking coords of starting room to spawn player
+                    xMin = l->room[0] / 10;
+                    yMin = l->room[1] / 10;
+                }
+
                 if (!isWellsCreate) { // Crete wells in this room
                     tileMap[l->room[1] / 10 + 1][l->room[0] / 10 + 1] = 4;
                     tileMap[l->room[1] / 10 + 1][l->room[0] / 10 + 3] = 4;
@@ -249,13 +253,6 @@ void createMap(vector<Enemy*>& en, Font f){
                     yTable = l->room[1] / 10 + 1;
 
                     isTablesCreate = true;
-                }
-
-                
-
-                if((l->room[0] + l->room[1]) / 10 < xMin + yMin){ // Taking coords of starting room to spawn player
-                    xMin = l->room[0] / 10;
-                    yMin = l->room[1] / 10;
                 }
 
                 if ((l->room[0] + l->room[1]) / 10 > xMax + yMax) { // Taking coords of end room to spawn boss
