@@ -14,6 +14,7 @@ void menu(RenderWindow& window) {
 	Sprite menu1(menuTexture1), menu2(menuTexture2), menu3(menuTexture3), about(aboutTexture), menuBg(menuBackground), warrior(warriorTexture), skeleton(skeletonTexture), cursor(cursorTexture);
 	bool isMenu = 1;
 	bool isCollision = false;
+	bool isAboutDrawing = false;
 	bool isGameStarting = false;
 	int menuNum = 0;
 	float menuAnimFrame = 0;
@@ -82,10 +83,15 @@ void menu(RenderWindow& window) {
 			skeleton.setTextureRect(IntRect(48 * int(menuAnimFrame), 0, 48, 48));
 			if (menuAnimFrame > 8) menuAnimFrame = 0;
 		}
+
+		if (Keyboard::isKeyPressed(Keyboard::Escape) && isAboutDrawing) {
+			isAboutDrawing = false;
+		}
+
 		// Click on buttons
-		if (Mouse::isButtonPressed(Mouse::Left)) {
+		if (Mouse::isButtonPressed(Mouse::Left) && !isAboutDrawing) {
 			if (menuNum == 1) { isGameStarting = true; }
-			if (menuNum == 2) { window.draw(about); window.display(); while (!Keyboard::isKeyPressed(Keyboard::Escape)); }
+			if (menuNum == 2) { isAboutDrawing = true; }
 			if (menuNum == 3) { window.close(); isMenu = false; }
 		}
 
@@ -98,6 +104,10 @@ void menu(RenderWindow& window) {
 		window.draw(menu3);
 		window.draw(skeleton);
 		window.draw(cursor);
+
+		if (isAboutDrawing) {
+			window.draw(about);
+		}
 
 		if (isGameStarting) {
 			window.draw(fade_end);
