@@ -38,7 +38,7 @@ int Game::run() {
 	// Prepare everything
 	RenderWindow window(sf::VideoMode(800, 600), "Vengeance and honor(indev)");
 	view.reset(sf::FloatRect(0, 0, 800, 600));
-	map_image.loadFromFile("images/map.png");
+	map_image.loadFromFile("images/tilesets/map.png");
 	map.loadFromImage(map_image);
 	s_map.setTexture(map);
 	font.loadFromFile("fonts/Hamlin-Regular.ttf");
@@ -54,7 +54,7 @@ int Game::run() {
 	text3.setFillColor(Color::White);
 	text3.setStyle(Text::Bold);
 
-	Player p("hero.png", 0, 0, 96.0, 96.0);
+	Player p("tilesets/hero.png", 0, 0, 96.0, 96.0);
 	Leaf root(0, 0, 1400, 900);
 	leafs.push_back(&root);
 
@@ -67,6 +67,8 @@ int Game::run() {
 	// Generating map
 	createMap(enemies, font);
 
+	window.setMouseCursorVisible(false);
+
 	srand((unsigned)time(0));
 
 	menu(window);
@@ -75,7 +77,7 @@ int Game::run() {
 	p.setplayercoordinateX(xMin * 32);
 	p.setplayercoordinateY(yMin * 32);
 
-	Enemy boss("boss.png", 1, 96.0, 96.0, bossRoomX, bossRoomY, bossRoomW, bossRoomH, font);
+	Enemy boss("tilesets/boss.png", 1, 96.0, 96.0, bossRoomX, bossRoomY, bossRoomW, bossRoomH, font);
 
 	enemies.push_back(&boss);
 

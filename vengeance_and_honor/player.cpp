@@ -124,7 +124,7 @@ void Player::update(float time) {
 		}
 	}
 	// Coins check
-	if (!isWellRiddleSolved) { std::cout << copperCoins << " " << silverCoins << " " << goldCoins << " " << std::endl; }
+	//if (!isWellRiddleSolved) { std::cout << copperCoins << " " << silverCoins << " " << goldCoins << " " << std::endl; }
 	if (copperCoins == 0 && silverCoins == 0 && goldCoins == 0 && !isWellRiddleSolved) {
 		isWellRiddleSolved = true;
 	}

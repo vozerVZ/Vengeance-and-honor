@@ -2,7 +2,7 @@
 
 void menu(RenderWindow& window) {
 	// Load textures
-	Texture menuTexture1, menuTexture2, menuTexture3, aboutTexture, menuBackground, warriorTexture, skeletonTexture;
+	Texture menuTexture1, menuTexture2, menuTexture3, aboutTexture, menuBackground, warriorTexture, skeletonTexture, cursorTexture;
 	menuTexture1.loadFromFile("images/menu/1.png");
 	menuTexture2.loadFromFile("images/menu/2.png");
 	menuTexture3.loadFromFile("images/menu/3.png");
@@ -10,9 +10,11 @@ void menu(RenderWindow& window) {
 	menuBackground.loadFromFile("images/menu/castle.jpg");
 	warriorTexture.loadFromFile("images/menu/warrior.png");
 	skeletonTexture.loadFromFile("images/menu/skeleton.png");
-	Sprite menu1(menuTexture1), menu2(menuTexture2), menu3(menuTexture3), about(aboutTexture), menuBg(menuBackground), warrior(warriorTexture), skeleton(skeletonTexture);
+	cursorTexture.loadFromFile("images/menu/cursor.png");
+	Sprite menu1(menuTexture1), menu2(menuTexture2), menu3(menuTexture3), about(aboutTexture), menuBg(menuBackground), warrior(warriorTexture), skeleton(skeletonTexture), cursor(cursorTexture);
 	bool isMenu = 1;
 	bool isCollision = false;
+	bool isGameStarting = false;
 	int menuNum = 0;
 	float menuAnimFrame = 0;
 	// Set textures
@@ -23,16 +25,29 @@ void menu(RenderWindow& window) {
 	skeleton.setPosition(100, 230);
 	menuBg.setPosition(0, 0);
 
+	cursor.setScale(0.1, 0.1);
+
+	RectangleShape fade(Vector2f(800, 600));
+	fade.setFillColor(Color(0, 0, 0, 0));
+	fade.setPosition(0, 0);
+
 	Clock menu_clock;
 
+	menuNum = 0;
+
+	float bgAlpha = 0;
+
 	while (isMenu) {
+		std::cout << bgAlpha << std::endl;
 		float menu_time = menu_clock.getElapsedTime().asMicroseconds();
 		menu_clock.restart();
 		menu_time = menu_time / 800;
 		menu1.setColor(Color::White);
 		menu2.setColor(Color::White);
 		menu3.setColor(Color::White);
+		
 		menuNum = 0;
+
 		window.clear();
 		// Set textures of warrior/skeleton near buttons
 		warrior.setTextureRect(IntRect(0, 0, 48, 48));
@@ -40,6 +55,16 @@ void menu(RenderWindow& window) {
 
 		if (!isCollision) { menuAnimFrame = 0; }
 		isCollision = false;
+
+		cursor.setPosition(Mouse::getPosition(window).x, Mouse::getPosition(window).y);
+
+		if (isGameStarting) {
+			bgAlpha += 0.3;
+			if (int(bgAlpha > 255)) {
+				isMenu = false;
+			}
+		}
+
 		// Start animation when cursor collide with button
 		if (IntRect(0, 120, 180, 50).contains(Mouse::getPosition(window))) {
 			isCollision = true;
@@ -60,10 +85,12 @@ void menu(RenderWindow& window) {
 		}
 		// Click on buttons
 		if (Mouse::isButtonPressed(Mouse::Left)) {
-			if (menuNum == 1) isMenu = false;
+			if (menuNum == 1) { isGameStarting = true; }
 			if (menuNum == 2) { window.draw(about); window.display(); while (!Keyboard::isKeyPressed(Keyboard::Escape)); }
 			if (menuNum == 3) { window.close(); isMenu = false; }
 		}
+
+		fade.setFillColor(Color(0, 0, 0, int(bgAlpha)));
 
 		window.draw(menuBg);
 		window.draw(menu1);
@@ -71,6 +98,11 @@ void menu(RenderWindow& window) {
 		window.draw(menu2);
 		window.draw(menu3);
 		window.draw(skeleton);
+		window.draw(cursor);
+
+		if (isGameStarting) {
+			window.draw(fade);
+		}
 
 		window.display();
 	}

@@ -265,9 +265,9 @@ void createMap(vector<Enemy*>& en, Font f){
                     bossRoomH = ((l->room[1] + l->room[3]) / 10 + 1) * 32;
                 }
                 // Create enemies in this room
-                en.push_back(new Enemy("enemy.png", 0, 96.0, 96.0, l->room[0] / 10 * 32, l->room[1] / 10 * 32, ((l->room[0] + l->room[2]) / 10 + 1) * 32, ((l->room[1] + l->room[3]) / 10 + 1) * 32, f));
-                en.push_back(new Enemy("enemy.png", 0, 96.0, 96.0, l->room[0] / 10 * 32, l->room[1] / 10 * 32, ((l->room[0] + l->room[2]) / 10 + 1) * 32, ((l->room[1] + l->room[3]) / 10 + 1) * 32, f));
-                en.push_back(new Enemy("enemy.png", 0, 96.0, 96.0, l->room[0] / 10 * 32, l->room[1] / 10 * 32, ((l->room[0] + l->room[2]) / 10 + 1) * 32, ((l->room[1] + l->room[3]) / 10 + 1) * 32, f));
+                en.push_back(new Enemy("tilesets/enemy.png", 0, 96.0, 96.0, l->room[0] / 10 * 32, l->room[1] / 10 * 32, ((l->room[0] + l->room[2]) / 10 + 1) * 32, ((l->room[1] + l->room[3]) / 10 + 1) * 32, f));
+                en.push_back(new Enemy("tilesets/enemy.png", 0, 96.0, 96.0, l->room[0] / 10 * 32, l->room[1] / 10 * 32, ((l->room[0] + l->room[2]) / 10 + 1) * 32, ((l->room[1] + l->room[3]) / 10 + 1) * 32, f));
+                en.push_back(new Enemy("tilesets/enemy.png", 0, 96.0, 96.0, l->room[0] / 10 * 32, l->room[1] / 10 * 32, ((l->room[0] + l->room[2]) / 10 + 1) * 32, ((l->room[1] + l->room[3]) / 10 + 1) * 32, f));
             }
             if (l->halls.size() > 0) { // Adding halls to the map
                 for (auto k : l->halls) {
