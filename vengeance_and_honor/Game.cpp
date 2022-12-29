@@ -45,10 +45,13 @@ int Game::run() {
 	Text text("", font, 13);
 	text.setFillColor(Color::White);
 	text.setStyle(Text::Bold);
-	//Sprite of end picture
+	//Sprite of end pictures
 	Texture startImg;
 	startImg.loadFromFile("images/story/start.png");
 	Sprite start(startImg);
+	Texture endImg;
+	endImg.loadFromFile("images/story/end.png");
+	Sprite end(endImg);
 
 	Player p("tilesets/hero.png", 0, 0, 96.0, 96.0);
 
@@ -374,11 +377,28 @@ int Game::run() {
 		start.setPosition(0, 0);
 		view.setCenter(400, 300);
 		window.setView(view);
-		// Drawing final page and fade
+		// Drawing final page(killed king) and fade
 		while (true) {
 			window.clear();
 
 			window.draw(start);
+
+			fade.setFillColor(Color(0, 0, 0, int(endAlpha)));
+			endAlpha -= 0.02f;
+
+			window.draw(fade);
+
+			if (endAlpha < 0) { break; }
+
+			window.display();
+		}
+
+		endAlpha = 255.0f;
+
+		while (true) {
+			window.clear();
+
+			window.draw(end);
 
 			fade.setFillColor(Color(0, 0, 0, int(endAlpha)));
 			endAlpha -= 0.02f;
