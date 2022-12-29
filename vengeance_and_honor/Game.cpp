@@ -46,6 +46,10 @@ int Game::run() {
 	text.setFillColor(Color::White);
 	text.setStyle(Text::Bold);
 
+	Texture startImg;
+	startImg.loadFromFile("images/story/start.png");
+	Sprite start(startImg);
+
 	Player p("tilesets/hero.png", 0, 0, 96.0, 96.0);
 	Leaf root(0, 0, 1400, 900);
 	leafs.push_back(&root);
@@ -55,6 +59,11 @@ int Game::run() {
 	r.setFillColor(Color::Black);
 	r.setOutlineColor(Color::Red);
 	r.setOutlineThickness(2);
+
+	float endAlpha = 255.0f;
+	RectangleShape fade(Vector2f(800, 600));
+	fade.setFillColor(Color(0, 0, 0, 255));
+	fade.setPosition(0, 0);
 
 	// Generating map
 	createMap(enemies, font);
@@ -73,7 +82,9 @@ int Game::run() {
 
 	enemies.push_back(&boss);
 
-	while (window.isOpen()) {
+	bool gameFlag = true;
+	//while (window.isOpen()) {
+	while(gameFlag){
 		float time = clock.getElapsedTime().asMicroseconds();
 		clock.restart();
 		time = time / 800;
@@ -137,6 +148,7 @@ int Game::run() {
 		if (Keyboard::isKeyPressed(Keyboard::Num3)) { p.setplayercoordinateX(boss.getenemycoordinateX()); p.setplayercoordinateY(boss.getenemycoordinateY()); }
 		if (Keyboard::isKeyPressed(Keyboard::Num4)) { p.copperCoins = 0; p.silverCoins = 0; p.goldCoins = 0; }
 		if (Keyboard::isKeyPressed(Keyboard::Num5)) { table1 = 0; table2 = 15; table3 = 5; table4 = 10; }
+		if (Keyboard::isKeyPressed(Keyboard::Num6)) { p.level = 20; p.maxHealth = 1000; p.health = 1000; p.damage = 500; }
 
 		// Player and enemies update/draw
 		p.update(time);
@@ -188,7 +200,7 @@ int Game::run() {
 
 		p.draw(window, debugMode);
 
-		// Draw player healthbar and level(same problem as text of enemy's info)
+		// Draw player hp(same problem as text of enemy's info)
 		std::ostringstream playerHP;
 		playerHP << p.health;
 		std::ostringstream playerMaxHP;
@@ -197,12 +209,36 @@ int Game::run() {
 		text.setString(playerHP.str() + '/' + playerMaxHP.str());
 		text.setPosition(view.getCenter().x - 248, view.getCenter().y - 301);
 		window.draw(text);
+		// Level
 		std::ostringstream playerLVL;
 		playerLVL << p.level;
 		text.setFillColor(Color(128, 128, 128));
 		text.setString(playerLVL.str() + " level");
 		text.setPosition(view.getCenter().x - 400, view.getCenter().y - 275);
 		window.draw(text);
+		// Coins
+		if (abs(xWell - int((p.getplayercoordinateX() + p.w / 2) / 32)) <= 8 && abs(yWell - int((p.getplayercoordinateY() + p.h - 15) / 32)) < 3) {
+			std::ostringstream money;
+			money << p.copperCoins;
+			text.setFillColor(Color(205, 127, 50));
+			text.setString(money.str() + " copper coins");
+			text.setPosition(view.getCenter().x - 400, view.getCenter().y - 260);
+			window.draw(text);
+
+			money.str("");
+			money << p.silverCoins;
+			text.setFillColor(Color(192, 192, 192));
+			text.setString(money.str() + " silver coins");
+			text.setPosition(view.getCenter().x - 400, view.getCenter().y - 245);
+			window.draw(text);
+
+			money.str("");
+			money << p.goldCoins;
+			text.setFillColor(Color(255, 215, 0));
+			text.setString(money.str() + " golden coins");
+			text.setPosition(view.getCenter().x - 400, view.getCenter().y - 230);
+			window.draw(text);
+		}
 
 		// Wells riddle text
 		r.setPosition(view.getCenter().x - 400, view.getCenter().y + 200);
@@ -211,7 +247,7 @@ int Game::run() {
 			if (!p.isWellRiddleSolved) {
 				text.setString("It's wells of cursed moneys. You have 15 copper coins, 3 silver and 0 gold coins. \nYou must get rid of them. This well reset your coins.");
 			}else{
-				text.setString("You are here for your s i n s");
+				text.setString("You are only the monster");
 			}
 			text.setPosition(view.getCenter().x - 400 + 50, view.getCenter().y + 200 + 50);
 			window.draw(r);
@@ -280,8 +316,30 @@ int Game::run() {
 			window.draw(text);
 		}
 
+		if (!boss.life) { gameFlag = false; }
 
 		window.display();
 	}
+
+	start.setPosition(0, 0);
+
+	view.setCenter(400, 300);
+	window.setView(view);
+
+	while (true) {
+		window.clear();
+
+		window.draw(start);
+
+		fade.setFillColor(Color(0, 0, 0, int(endAlpha)));
+		endAlpha -= 0.02f;
+
+		window.draw(fade);
+		
+		if (endAlpha < 0) { break; }
+
+		window.display();
+	}
+
 	return 0;
 }

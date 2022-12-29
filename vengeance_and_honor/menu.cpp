@@ -27,9 +27,9 @@ void menu(RenderWindow& window) {
 
 	cursor.setScale(0.1, 0.1);
 
-	RectangleShape fade(Vector2f(800, 600));
-	fade.setFillColor(Color(0, 0, 0, 0));
-	fade.setPosition(0, 0);
+	RectangleShape fade_end(Vector2f(800, 600));
+	fade_end.setFillColor(Color(0, 0, 0, 0));
+	fade_end.setPosition(0, 0);
 
 	Clock menu_clock;
 
@@ -89,7 +89,7 @@ void menu(RenderWindow& window) {
 			if (menuNum == 3) { window.close(); isMenu = false; }
 		}
 
-		fade.setFillColor(Color(0, 0, 0, int(bgAlpha)));
+		fade_end.setFillColor(Color(0, 0, 0, int(bgAlpha)));
 
 		window.draw(menuBg);
 		window.draw(menu1);
@@ -100,7 +100,7 @@ void menu(RenderWindow& window) {
 		window.draw(cursor);
 
 		if (isGameStarting) {
-			window.draw(fade);
+			window.draw(fade_end);
 		}
 
 		window.display();

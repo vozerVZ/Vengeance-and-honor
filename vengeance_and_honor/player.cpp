@@ -77,14 +77,6 @@ void Player::update(float time) {
 	healthBar.setPosition(x - 400, y - 300);
 	expBar.setSize(Vector2f(150 * exp / 100, 5));
 	expBar.setPosition(x - 400, y - 280);
-	// Player heal
-	if (healTimer == 0 && health < maxHealth && life && attackersCount == 0) {
-		healTimer = 100;
-		health += 5;
-		if (health > maxHealth) {
-			health = maxHealth;
-		}
-	}
 	// Player respawn
 	if (respawnTimer == 1) {
 		life = true;
@@ -137,6 +129,15 @@ void Player::update(float time) {
 		level += 1;
 		damage += 10;
 		maxHealth += 10;
+	}
+
+	// Player heal
+	if (healTimer == 0 && health < maxHealth && life && attackersCount == 0) {
+		healTimer = 100;
+		health += 5;
+		if (health > maxHealth) {
+			health = maxHealth;
+		}
 	}
 
 	// Coins check
