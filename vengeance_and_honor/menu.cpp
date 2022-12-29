@@ -56,7 +56,8 @@ void menu(RenderWindow& window) {
 		if (!isCollision) { menuAnimFrame = 0; }
 		isCollision = false;
 
-		cursor.setPosition(Mouse::getPosition(window).x, Mouse::getPosition(window).y);
+		Vector2i mouse_cursor = Mouse::getPosition(window);
+		cursor.setPosition(mouse_cursor.x, mouse_cursor.y);
 
 		if (isGameStarting) {
 			bgAlpha += 0.3;
