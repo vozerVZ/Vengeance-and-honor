@@ -28,6 +28,7 @@ bool Leaf::split() { // Randomly split leaf into two smaller
     }
 
     bool splitMode = (rand() % 100) > 50;
+    std::cout << splitMode << std::endl;
 
     if (width > height && width / height >= 1.25) {
         splitMode = false;
@@ -65,6 +66,7 @@ bool Leaf::split() { // Randomly split leaf into two smaller
 void Leaf::createRoom() { 
     // If fe dont have children(=>smallest leaf), create room inside
     // Else recursively call this function on children
+
     /*if (isLeftChildNull && isRightChildNull) {
         int xRand = 10 + rand() % (width / 5);
         int yRand = 10 + rand() % (height / 5);
@@ -236,7 +238,7 @@ void createMap(vector<Enemy*>& en, Font f){
                     yWell = l->room[1] / 10 + 1;
 
                     isWellsCreate = true;
-                }else if (!isTablesCreate) {
+                }else if (!isTablesCreate) { // Create tables in this room
                     tileMap[l->room[1] / 10 + 1][l->room[0] / 10 + 1] = 5;
                     tileMap[l->room[1] / 10 + 1][l->room[0] / 10 + 3] = 5;
                     tileMap[l->room[1] / 10 + 1][l->room[0] / 10 + 5] = 5;
@@ -295,12 +297,4 @@ void createMap(vector<Enemy*>& en, Font f){
             }
         }
     }
-
-    /*for (int i = 0; i < 90; i++) {
-        for (int j = 0; j < 140; j++) {
-            cout << tileMap[i][j];
-        }
-        cout << endl;
-    }
-    */
 }

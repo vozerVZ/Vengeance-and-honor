@@ -45,32 +45,46 @@ int Game::run() {
 	Text text("", font, 13);
 	text.setFillColor(Color::White);
 	text.setStyle(Text::Bold);
-
+	//Sprite of end picture
 	Texture startImg;
 	startImg.loadFromFile("images/story/start.png");
 	Sprite start(startImg);
 
 	Player p("tilesets/hero.png", 0, 0, 96.0, 96.0);
+
+	// Starting leaf class to dividing
 	Leaf root(0, 0, 1400, 900);
 	leafs.push_back(&root);
 
+	// Black rectangle for writing info
 	RectangleShape r(Vector2f(800.0f, 100.0f));
 	r.setPosition(view.getCenter().x - 400, view.getCenter().y + 200);
 	r.setFillColor(Color::Black);
 	r.setOutlineColor(Color::Red);
 	r.setOutlineThickness(2);
 
+	// Fade after boss eath
 	float endAlpha = 255.0f;
 	RectangleShape fade(Vector2f(800, 600));
 	fade.setFillColor(Color(0, 0, 0, 255));
 	fade.setPosition(0, 0);
 
+	// Tile for drawing minimap
+	RectangleShape minimapTile(Vector2f(6, 7));
+	minimapTile.setFillColor(Color(0, 0, 0));
+	minimapTile.setPosition(0, 0);
+
+	// Bias of minimap
+	int xMapBias = 0;
+	int yMapBias = 0;
+	bool isMapDrawing = false;
+
 	// Generating map
+	srand((unsigned)time(0));
+
 	createMap(enemies, font);
 
 	window.setMouseCursorVisible(false);
-
-	srand((unsigned)time(0));
 
 	menu(window);
 
@@ -83,18 +97,24 @@ int Game::run() {
 	enemies.push_back(&boss);
 
 	bool gameFlag = true;
-	//while (window.isOpen()) {
+	bool isGameClosedWithESC = false;
+
 	while(gameFlag){
 		float time = clock.getElapsedTime().asMicroseconds();
 		clock.restart();
 		time = time / 800;
-		sf::Event event;
+		Event event;
 		while (window.pollEvent(event)) {
-			if (event.type == sf::Event::Closed)
+			if (event.type == sf::Event::Closed || event.key.code == sf::Keyboard::Escape) {
 				window.close();
+				gameFlag = false;
+				isGameClosedWithESC = true;
+			}
 		}
 
-		p.move(reinterpret_cast<int*>(tileMap), 90, 140, time, enemies);
+		if (!isMapDrawing) {
+			p.move(reinterpret_cast<int*>(tileMap), 90, 140, time, enemies);
+		}
 
 		//Keyboard control
 		if (Keyboard::isKeyPressed(Keyboard::P) and debugButtonDelay == 0) {
@@ -122,6 +142,7 @@ int Game::run() {
 					if (p.goldCoins >= 1 && p.silverCoins >= 1) { p.goldCoins -= 1; p.silverCoins -= 1; p.copperCoins += 1; }
 				}
 			}
+			// Tables
 			if (!p.isTableRiddleSolved) {
 				if (xTable == int((p.getplayercoordinateX() + p.w / 2) / 32 - 2) && yTable == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
 					table1 += 1;
@@ -142,13 +163,23 @@ int Game::run() {
 			}
 			debugButtonDelay = 30;
 		}
-
-		if (Keyboard::isKeyPressed(Keyboard::Num1)) { p.setplayercoordinateX(xWell * 32 + 100); p.setplayercoordinateY(yWell * 32 + 30); }
-		if (Keyboard::isKeyPressed(Keyboard::Num2)) { p.setplayercoordinateX(xTable * 32 + 100); p.setplayercoordinateY(yTable * 32 + 30); }
-		if (Keyboard::isKeyPressed(Keyboard::Num3)) { p.setplayercoordinateX(boss.getenemycoordinateX()); p.setplayercoordinateY(boss.getenemycoordinateY()); }
-		if (Keyboard::isKeyPressed(Keyboard::Num4)) { p.copperCoins = 0; p.silverCoins = 0; p.goldCoins = 0; }
-		if (Keyboard::isKeyPressed(Keyboard::Num5)) { table1 = 0; table2 = 15; table3 = 5; table4 = 10; }
-		if (Keyboard::isKeyPressed(Keyboard::Num6)) { p.level = 20; p.maxHealth = 1000; p.health = 1000; p.damage = 500; }
+		// Cheats
+		if (Keyboard::isKeyPressed(Keyboard::Num1)) { p.setplayercoordinateX(xWell * 32 + 100); p.setplayercoordinateY(yWell * 32 + 30); } // Teleport to wells riddle
+		if (Keyboard::isKeyPressed(Keyboard::Num2)) { p.setplayercoordinateX(xTable * 32 + 100); p.setplayercoordinateY(yTable * 32 + 30); } // Teleport to cards riddle
+		if (Keyboard::isKeyPressed(Keyboard::Num3)) { p.setplayercoordinateX(boss.getenemycoordinateX()); p.setplayercoordinateY(boss.getenemycoordinateY()); } // Teleport to boss
+		if (Keyboard::isKeyPressed(Keyboard::Num4)) { p.copperCoins = 0; p.silverCoins = 0; p.goldCoins = 0; } // Solve wells riddle
+		if (Keyboard::isKeyPressed(Keyboard::Num5)) { table1 = 0; table2 = 15; table3 = 5; table4 = 10; } // Solve cards riddle
+		if (Keyboard::isKeyPressed(Keyboard::Num6)) { p.level = 20; p.maxHealth = 1000; p.health = 1000; p.damage = 500; } // Buff
+		//Control minimap
+		if (Keyboard::isKeyPressed(Keyboard::Left)) { xMapBias += 1; }
+		if (Keyboard::isKeyPressed(Keyboard::Right)) { xMapBias -= 1; }
+		if (Keyboard::isKeyPressed(Keyboard::Up)) { yMapBias += 1; }
+		if (Keyboard::isKeyPressed(Keyboard::Down)) { yMapBias -= 1; }
+		if (Keyboard::isKeyPressed(Keyboard::M) && debugButtonDelay == 0) {
+			isMapDrawing = !isMapDrawing; 
+			debugButtonDelay = 10; 
+			xMapBias = 0; yMapBias = 0; 
+		}
 
 		// Player and enemies update/draw
 		p.update(time);
@@ -157,17 +188,18 @@ int Game::run() {
 			enemies[i]->update(time, p.getplayercoordinateX(), p.getplayercoordinateY(), p.w, p.h, p.health, p.attackersCount);
 		}
 
+		// Clearing the screen and move camera to player
 		view.setCenter(p.getplayercoordinateX(), p.getplayercoordinateY());
 		window.setView(view);
 		window.clear();
-
+		// Clear wells after solving
 		if (p.isWellRiddleSolved && tileMap[yWell][xWell + 2] == 4) {
 			tileMap[yWell][xWell + 2] = 1;
 			tileMap[yWell][xWell + 4] = 1;
 			tileMap[yWell][xWell + 6] = 1;
 			tileMap[yWell][xWell + 8] = 1;
 		}
-
+		// Check if table riddle solved
 		if (!p.isTableRiddleSolved && table1 == 0 && table2 == 15 && table3 == 5 && table4 == 10) {
 			p.isTableRiddleSolved = true;
 		}
@@ -316,29 +348,46 @@ int Game::run() {
 			window.draw(text);
 		}
 
+		// Map drawing
+		if (isMapDrawing) {
+			window.clear();
+			for (int i = 0; i < 90; i++) {
+				for (int j = 0; j < 140; j++) {
+					if (tileMap[i][j] == 0)  minimapTile.setFillColor(Color(0, 0, 0)); // black square(out-of-bounds)
+					if (tileMap[i][j] == 1)  minimapTile.setFillColor(Color(150, 75, 0)); // wooden floor
+					if (tileMap[i][j] == 2)  minimapTile.setFillColor(Color(128, 128, 128)); // cobble wal
+					if (tileMap[i][j] == 4)  minimapTile.setFillColor(Color(50, 51, 50)); // well
+					if (tileMap[i][j] == 5)  minimapTile.setFillColor(Color(0, 77, 0)); // cards table
+					minimapTile.setPosition((j - 30 + xMapBias) * 6, (i - 30 + yMapBias) * 7);
+					window.draw(minimapTile);
+				}
+			}
+		}
+		// If boss is dead - exit the main game cycle
 		if (!boss.life) { gameFlag = false; }
 
 		window.display();
 	}
+	if (!isGameClosedWithESC) {
+		// Resetting the view
+		start.setPosition(0, 0);
+		view.setCenter(400, 300);
+		window.setView(view);
+		// Drawing final page and fade
+		while (true) {
+			window.clear();
 
-	start.setPosition(0, 0);
+			window.draw(start);
 
-	view.setCenter(400, 300);
-	window.setView(view);
+			fade.setFillColor(Color(0, 0, 0, int(endAlpha)));
+			endAlpha -= 0.02f;
 
-	while (true) {
-		window.clear();
+			window.draw(fade);
 
-		window.draw(start);
+			if (endAlpha < 0) { break; }
 
-		fade.setFillColor(Color(0, 0, 0, int(endAlpha)));
-		endAlpha -= 0.02f;
-
-		window.draw(fade);
-		
-		if (endAlpha < 0) { break; }
-
-		window.display();
+			window.display();
+		}
 	}
 
 	return 0;
