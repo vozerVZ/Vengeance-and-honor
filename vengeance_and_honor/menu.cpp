@@ -56,11 +56,6 @@ void menu(RenderWindow& window) {
 		if (!isCollision) { menuAnimFrame = 0; }
 		isCollision = false;
 
-		if (!isAboutDrawing) {
-			Vector2i mouse_cursor = Mouse::getPosition(window);
-			cursor.setPosition(mouse_cursor.x, mouse_cursor.y);
-		}
-
 		if (isGameStarting) {
 			bgAlpha += 0.3;
 			if (int(bgAlpha > 255)) {
@@ -69,22 +64,27 @@ void menu(RenderWindow& window) {
 		}
 
 		// Start animation when cursor collide with button
-		if (IntRect(0, 120, 180, 50).contains(Mouse::getPosition(window))) {
-			isCollision = true;
-			menu1.setColor(Color::Blue);
-			menuNum = 1;
-			menuAnimFrame += 0.005 * menu_time;
-			warrior.setTextureRect(IntRect(48 * int(menuAnimFrame), 0, 48, 48));
-			if (menuAnimFrame > 6) menuAnimFrame = 0;
-		}
-		if (IntRect(0, 180, 200, 50).contains(Mouse::getPosition(window))) { menu2.setColor(Color::Blue); menuNum = 2; }
-		if (IntRect(0, 240, 120, 50).contains(Mouse::getPosition(window))) {
-			isCollision = true;
-			menu3.setColor(Color::Blue);
-			menuNum = 3;
-			menuAnimFrame += 0.005 * menu_time;
-			skeleton.setTextureRect(IntRect(48 * int(menuAnimFrame), 0, 48, 48));
-			if (menuAnimFrame > 8) menuAnimFrame = 0;
+		if (!isAboutDrawing) {
+			Vector2i mouse_cursor = Mouse::getPosition(window);
+			cursor.setPosition(mouse_cursor.x, mouse_cursor.y);
+
+			if (IntRect(0, 120, 180, 50).contains(mouse_cursor)) {
+				isCollision = true;
+				menu1.setColor(Color::Blue);
+				menuNum = 1;
+				menuAnimFrame += 0.005 * menu_time;
+				warrior.setTextureRect(IntRect(48 * int(menuAnimFrame), 0, 48, 48));
+				if (menuAnimFrame > 6) menuAnimFrame = 0;
+			}
+			if (IntRect(0, 180, 200, 50).contains(mouse_cursor)) { menu2.setColor(Color::Blue); menuNum = 2; }
+			if (IntRect(0, 240, 120, 50).contains(mouse_cursor)) {
+				isCollision = true;
+				menu3.setColor(Color::Blue);
+				menuNum = 3;
+				menuAnimFrame += 0.005 * menu_time;
+				skeleton.setTextureRect(IntRect(48 * int(menuAnimFrame), 0, 48, 48));
+				if (menuAnimFrame > 8) menuAnimFrame = 0;
+			}
 		}
 
 		if (Keyboard::isKeyPressed(Keyboard::Escape) && isAboutDrawing) {
