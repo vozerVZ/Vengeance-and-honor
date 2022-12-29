@@ -14,6 +14,7 @@ public:
 	float xLC, yLC, xRC, yRC; //Corners of area, where enemy walking(LC - Left Corner, RC - Right Corner)
 	float xD, yD; //Destination x, y
 	int dir;
+	int id;
 	int moveTimer;
 	int attackTimer;
 	int respawnTimer;
@@ -21,6 +22,7 @@ public:
 	int maxHealth;
 	int health;
 	int damage;
+	int expReward;
 	String name;
 	int level;
 	bool life;
@@ -42,11 +44,11 @@ public:
 	RectangleShape healthBar;
 	CircleShape legHitBox;
 	// Functions
-	Enemy(String F, int id, float W, float H, float xlc, float ylc, float xrc, float yrc, Font f);
+	Enemy(String F, int id_en, float W, float H, float xlc, float ylc, float xrc, float yrc, Font f);
 	void update(float time, float playerX, float playerY, float playerW, float playerH, int& pl_hp, int& pl_att_c);
 	float getenemycoordinateX();
 	float getenemycoordinateY();
-	void getDamage(int dmg);
+	void getDamage(int dmg, bool wellRiddle, bool tableRiddle);
 	void draw(RenderWindow& w, bool debug);
 	FloatRect getRect();
 };

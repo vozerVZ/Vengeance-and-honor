@@ -38,7 +38,6 @@ void menu(RenderWindow& window) {
 	float bgAlpha = 0;
 
 	while (isMenu) {
-		std::cout << bgAlpha << std::endl;
 		float menu_time = menu_clock.getElapsedTime().asMicroseconds();
 		menu_clock.restart();
 		menu_time = menu_time / 800;

@@ -46,14 +46,6 @@ int Game::run() {
 	text.setFillColor(Color::White);
 	text.setStyle(Text::Bold);
 
-	Text text2("", font, 13);
-	text2.setFillColor(Color::White);
-	text2.setStyle(Text::Bold);
-
-	Text text3("", font, 13);
-	text3.setFillColor(Color::White);
-	text3.setStyle(Text::Bold);
-
 	Player p("tilesets/hero.png", 0, 0, 96.0, 96.0);
 	Leaf root(0, 0, 1400, 900);
 	leafs.push_back(&root);
@@ -196,7 +188,7 @@ int Game::run() {
 
 		p.draw(window, debugMode);
 
-		// Draw player healthbar(same problem as text of enemy's info)
+		// Draw player healthbar and level(same problem as text of enemy's info)
 		std::ostringstream playerHP;
 		playerHP << p.health;
 		std::ostringstream playerMaxHP;
@@ -204,6 +196,12 @@ int Game::run() {
 		text.setFillColor(Color(255, 0, 0));
 		text.setString(playerHP.str() + '/' + playerMaxHP.str());
 		text.setPosition(view.getCenter().x - 248, view.getCenter().y - 301);
+		window.draw(text);
+		std::ostringstream playerLVL;
+		playerLVL << p.level;
+		text.setFillColor(Color(128, 128, 128));
+		text.setString(playerLVL.str() + " level");
+		text.setPosition(view.getCenter().x - 400, view.getCenter().y - 275);
 		window.draw(text);
 
 		// Wells riddle text
@@ -243,22 +241,23 @@ int Game::run() {
 		//Tables riddle text
 		if (xTable == int((p.getplayercoordinateX() + p.w / 2) / 32) && yTable == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
 			if (!p.isTableRiddleSolved) {
+				window.draw(r);
+				text.setPosition(view.getCenter().x - 400 + 20, view.getCenter().y + 200 + 10);
 				text.setString("The cards on either side of the four are black. The club is to the right of the three, but not next to it.");
+				window.draw(text);
 
-				text2.setString("The spade is located to the left of the heart.");
-				text2.setPosition(view.getCenter().x - 400 + 20, view.getCenter().y + 200 + 30);
-				window.draw(text2);
+				text.setString("The spade is located to the left of the heart.");
+				text.setPosition(view.getCenter().x - 400 + 20, view.getCenter().y + 200 + 30);
+				window.draw(text);
 
-				text3.setString("The two middle cards add up to an even number. None of them are clubs.");
-				text3.setPosition(view.getCenter().x - 400 + 20, view.getCenter().y + 200 + 50);
-				window.draw(text3);
+				text.setString("The two middle cards add up to an even number. None of them are clubs.");
+				text.setPosition(view.getCenter().x - 400 + 20, view.getCenter().y + 200 + 50);
+				window.draw(text);
 			} else {
 				text.setString("Why did you kill her?");
+				window.draw(text);
 			}
-
-			text.setPosition(view.getCenter().x - 400 + 20, view.getCenter().y + 200 + 10);
-			window.draw(r);
-			window.draw(text);
+			
 		} else if (xTable == int((p.getplayercoordinateX() + p.w / 2) / 32 - 2) && yTable == int((p.getplayercoordinateY() + p.h - 15) / 32)) {
 			text.setString(cards[table1]);
 			text.setPosition(view.getCenter().x - 400 + 50, view.getCenter().y + 200 + 50);

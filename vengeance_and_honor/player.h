@@ -15,6 +15,8 @@ public:
 	int maxHealth;
 	int health;
 	int damage;
+	int level;
+	int exp;
 	int attackersCount;
 	int copperCoins, silverCoins, goldCoins;
 	bool life;
@@ -42,6 +44,7 @@ public:
 	CircleShape legHitBox;
 	RectangleShape maxHealthBar;
 	RectangleShape healthBar;
+	RectangleShape expBar;
 	// Functions
 	Player(String F, float X, float Y, float W, float H);
 	void update(float time);

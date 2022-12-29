@@ -1,17 +1,19 @@
 #include "enemy.h"
 
-Enemy::Enemy(String F, int id, float W, float H, float xlc, float ylc, float xrc, float yrc, Font f) {
+Enemy::Enemy(String F, int id_en, float W, float H, float xlc, float ylc, float xrc, float yrc, Font f) {
 	dx = 0; dy = 0; speed = 0.05;
 	dir = 0;
 	moveTimer = 0;
 	attackTimer = 0;
 	respawnTimer = 0;
 	mode = 0;
+	id = id_en;
 	if (id == 0) {
 		maxHealth = 50;
 		damage = 5;
 		name = "Skeleton";
 		level = 1;
+		expReward = 40;
 		ANIM_WALKING_MAX_FRAMES = 6;
 		ANIM_ATTACK_MAX_FRAMES = 8;
 		ANIM_DEATH_MAX_FRAMES = 7;
@@ -20,6 +22,7 @@ Enemy::Enemy(String F, int id, float W, float H, float xlc, float ylc, float xrc
 		damage = 25;
 		name = "Skeleton king";
 		level = 10;
+		expReward = 500;
 		ANIM_WALKING_MAX_FRAMES = 10;
 		ANIM_ATTACK_MAX_FRAMES = 10;
 		ANIM_DEATH_MAX_FRAMES = 13;
@@ -241,7 +244,8 @@ float Enemy::getenemycoordinateY() {
 	return y;
 }
 
-void Enemy::getDamage(int dmg){
+void Enemy::getDamage(int dmg, bool wellRiddle, bool tableRiddle){
+	if(id == 0 || (id == 1 && wellRiddle && tableRiddle))
 	health -= dmg;
 }
 

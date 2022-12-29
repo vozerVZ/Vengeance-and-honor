@@ -4,6 +4,8 @@ Player::Player(String F, float X, float Y, float W, float H) {
 	dx = 0; dy = 0; speed = 0; dir = 0;
 	maxHealth = 100;
 	damage = 20;
+	level = 0;
+	exp = 0;
 	life = true;
 	isWellRiddleSolved = false;
 	isTableRiddleSolved = false;
@@ -32,7 +34,7 @@ Player::Player(String F, float X, float Y, float W, float H) {
 	hitBox.setOutlineColor(Color(0, 0, 255));
 	hitBox.setPosition(x, y);
 	hitBox.setOutlineThickness(1);
-	// Player healthbars set
+	// Player bars set
 	maxHealthBar.setSize(Vector2f(150, 15));
 	maxHealthBar.setFillColor(Color(128, 0, 0));
 	maxHealthBar.setPosition(x - 400, y - 300);
@@ -40,6 +42,10 @@ Player::Player(String F, float X, float Y, float W, float H) {
 	healthBar.setSize(Vector2f(150 * health / maxHealth, 15));
 	healthBar.setFillColor(Color(255, 0, 0));
 	healthBar.setPosition(x - 400, y - 300);
+
+	expBar.setSize(Vector2f(150 * exp / 100, 5));
+	expBar.setFillColor(Color(255, 255, 71));
+	expBar.setPosition(x - 400, y - 250);
 	//Leg hitbox set(red dot under legs)
 	legHitBox.setRadius(3);
 	legHitBox.setPosition(x + w / 2, y + h);
@@ -69,7 +75,8 @@ void Player::update(float time) {
 	maxHealthBar.setPosition(x - 400, y - 300);
 	healthBar.setSize(sf::Vector2f(150 * health / maxHealth, 15));
 	healthBar.setPosition(x - 400, y - 300);
-
+	expBar.setSize(Vector2f(150 * exp / 100, 5));
+	expBar.setPosition(x - 400, y - 280);
 	// Player heal
 	if (healTimer == 0 && health < maxHealth && life && attackersCount == 0) {
 		healTimer = 100;
@@ -123,6 +130,15 @@ void Player::update(float time) {
 			CurrentFrame = 0;
 		}
 	}
+
+	// Level up
+	if (exp > 100) {
+		exp -= 100;
+		level += 1;
+		damage += 10;
+		maxHealth += 10;
+	}
+
 	// Coins check
 	//if (!isWellRiddleSolved) { std::cout << copperCoins << " " << silverCoins << " " << goldCoins << " " << std::endl; }
 	if (copperCoins == 0 && silverCoins == 0 && goldCoins == 0 && !isWellRiddleSolved) {
@@ -173,15 +189,18 @@ void Player::move(const int tileMap[], size_t m, size_t n, float t, std::vector<
 			}
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Enter) && attackTimer == 0 && life) {
-			attackTimer = 100;
+			attackTimer = 60;
 			idleTimer = 0;
 			animType = 2;
 			CurrentFrame = 0;
 			for (int i = 0; i < en.size(); i++) {
 				if (en[i]->getRect().intersects(getRect()) && en[i]->life) {
-					en[i]->getDamage(damage);
+					en[i]->getDamage(damage, isWellRiddleSolved, isTableRiddleSolved);
 					en[i]->mode = 1;
 					if (!en[i]->isCount) { en[i]->isCount = true; attackersCount++; }
+					if (en[i]->health <= 0) {
+						exp += en[i]->expReward;
+					}
 					break;
 				}
 			}
@@ -197,6 +216,7 @@ void Player::draw(RenderWindow& w, bool debug) {
 	w.draw(sprite);
 	w.draw(maxHealthBar);
 	w.draw(healthBar);
+	w.draw(expBar);
 
 	if (debug) {
 		w.draw(hitBox);
