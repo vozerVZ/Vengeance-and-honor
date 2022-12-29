@@ -100,15 +100,15 @@ void menu(RenderWindow& window) {
 
 		fade_end.setFillColor(Color(0, 0, 0, int(bgAlpha)));
 
-		window.draw(menuBg);
-		window.draw(menu1);
-		window.draw(warrior);
-		window.draw(menu2);
-		window.draw(menu3);
-		window.draw(skeleton);
-		window.draw(cursor);
-
-		if (isAboutDrawing) {
+		if (!isAboutDrawing) {
+			window.draw(menuBg);
+			window.draw(menu1);
+			window.draw(warrior);
+			window.draw(menu2);
+			window.draw(menu3);
+			window.draw(skeleton);
+			window.draw(cursor);
+		} else {
 			window.draw(about);
 		}
 
